@@ -41,7 +41,7 @@ public class Dungeon {
     let maxRoomWidth: Int
     let minRoomHeight: Int = MIN_ROOM_HEIGHT
     let maxRoomHeight: Int
-    var blocks: [[Block]]
+    var blocks: [[Block]]  // y-indexed first, then x-indexed
     public let width: Int
     public let height: Int
 
@@ -53,55 +53,55 @@ public class Dungeon {
         // Generate width and height.
         width = Int.random(in: max(Int(modifier * Double(maxWidth)), minWidth) ... maxWidth)
         height = Int.random(in: max(Int(modifier * Double(maxHeight)), minHeight) ... maxHeight)
-        maxRoomWidth = Int.random(in: minRoomWidth ... Int(modifier * Double(width / 4)))
+        maxRoomWidth = Int.random(in: minRoomWidth ... Int(modifier * Double(width / 5)))
         maxRoomHeight = Int.random(in: minRoomHeight ... Int(modifier * Double(height / 5)))
         // Generate uninitialized blocks to populate the list.
         let xRange = 0 ..< width
         let yRange = 0 ..< height
-        blocks = xRange.map { _ in yRange.map { _ in UninitializedBlock() }}
+        blocks = yRange.map { _ in xRange.map { _ in UninitializedBlock() }}
         // Begin excavation.
         excavate()
-
-//        // Determine start/end positions.
-//        start = Point.generateRandomPoint(xMin: 0, xMax: width, yMin: 0, yMax: height)
-//        var tempEnd = start
-//        while tempEnd.distanceFrom(other: start) < MIN_ENDPOINTS_DISTANCE {
-//            tempEnd = Point.generateRandomPoint(xMin: 0, xMax: width, yMin: 0, yMax: height)
-//        }
-//        end = tempEnd
     }
 
     private func excavate() {
-        // This initial implementation builds left-to-right dungeons (with vertical variance).
-        // TODO: Allow for more interesting dungeons.
-        // Pick a starting point somewhere on the left tenth of the dungeon.
+        for _ in 0 ..< 5 {
+            let startPoint = Point.generateRandomPoint(xMin: 0, xMax: width - maxRoomWidth, yMin: 0, yMax: height - maxRoomHeight)
+            excavateRoomStartingAtPoint(startPoint)
+        }
+    }
+
+    private func excavateRoomStartingAtPoint(_ start: Point) {
         let roomWidth = Int.random(in: minRoomWidth ... maxRoomWidth)
         let roomHeight = Int.random(in: minRoomHeight ... maxRoomHeight)
-        let start = Point.generateRandomPoint(xMin: 0, xMax: width / 5, yMin: 0, yMax: height - roomHeight)
         // The starting block is the bottom-left corner of the first room. Move rightwards.
         let end = Point(start.x + roomWidth, start.y + roomHeight)
+        // Fill the rectangle with empty blocks.
         fill(from: start, to: end, withBlockType: EmptyBlock.self)
     }
 
     private func fill(from pointA: Point, to pointB: Point, withBlockType blockType: Block.Type) {
-        (pointA.x ... pointB.x).forEach { x in
-            (pointA.y ... pointB.y).forEach { y in
-                blocks[x][y] = blockType.init()
+        for y in pointA.y ... pointB.y {
+            for x in pointA.x ... pointB.x {
+                setBlockAt(x: x, y: y, toValue: blockType.init())
             }
         }
     }
 
     public func getBlockAt(x: Int, y: Int) -> Block? {
-        guard x >= 0 && x < blocks.count else {
+        guard x >= 0 && x < width else {
             return nil
         }
-        guard y >= 0 && y < blocks[0].count else {
+        guard y >= 0 && y < height else {
             return nil
         }
-        return blocks[x][y]
+        return blocks[y][x]  // y-indexed first, then x-indexed
     }
 
     public func getBlockAt(point: Point) -> Block? {
         return getBlockAt(x: point.x, y: point.y)
+    }
+
+    private func setBlockAt(x: Int, y: Int, toValue block: Block) {
+        blocks[y][x] = block  // y-indexed first, then x-indexed
     }
 }
