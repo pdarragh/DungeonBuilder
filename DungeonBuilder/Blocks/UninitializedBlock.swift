@@ -7,5 +7,5 @@
 //
 
 public class UninitializedBlock: Block {
-
+    public var traversable = false
 }
