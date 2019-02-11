@@ -7,5 +7,7 @@
 //
 
 public class UninitializedBlock: Block {
-    public var traversable = false
+    public var traversable: Bool = true
+
+    public required init() { }
 }

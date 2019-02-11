@@ -8,4 +8,6 @@
 
 public protocol Block {
     var traversable: Bool { get }
+
+    init()
 }
