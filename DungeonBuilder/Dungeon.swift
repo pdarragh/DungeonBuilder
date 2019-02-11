@@ -41,7 +41,7 @@ public class Dungeon {
     let maxRoomWidth: Int
     let minRoomHeight: Int = MIN_ROOM_HEIGHT
     let maxRoomHeight: Int
-    var blocks: [[Block]]  // y-indexed first, then x-indexed
+    var blocks: [[Block]]  // y-indexed first, then x-indexed; (0, 0) is the bottom-left corner
     public let width: Int
     public let height: Int
 
@@ -73,7 +73,7 @@ public class Dungeon {
     private func excavateRoomStartingAtPoint(_ start: Point) {
         let roomWidth = Int.random(in: minRoomWidth ... maxRoomWidth)
         let roomHeight = Int.random(in: minRoomHeight ... maxRoomHeight)
-        // The starting block is the bottom-left corner of the first room. Move rightwards.
+        // The starting block is the bottom-left corner of the room. Move rightwards and upwards.
         let end = Point(start.x + roomWidth, start.y + roomHeight)
         // Fill the rectangle with empty blocks.
         fill(from: start, to: end, withBlockType: EmptyBlock.self)
