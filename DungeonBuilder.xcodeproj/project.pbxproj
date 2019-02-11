@@ -8,12 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		4F8CB7032211F438001009A8 /* DungeonBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 4F8CB7012211F438001009A8 /* DungeonBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4F8CB70C2211F557001009A8 /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8CB70B2211F557001009A8 /* Block.swift */; };
+		4F8CB70E2211F57B001009A8 /* UninitializedBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8CB70D2211F57B001009A8 /* UninitializedBlock.swift */; };
+		4F8CB7102211F695001009A8 /* Point.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8CB70F2211F695001009A8 /* Point.swift */; };
+		4F8CB7122211F6B6001009A8 /* Dungeon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8CB7112211F6B6001009A8 /* Dungeon.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4F8CB6FE2211F438001009A8 /* DungeonBuilder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DungeonBuilder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F8CB7012211F438001009A8 /* DungeonBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DungeonBuilder.h; sourceTree = "<group>"; };
 		4F8CB7022211F438001009A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4F8CB70B2211F557001009A8 /* Block.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Block.swift; sourceTree = "<group>"; };
+		4F8CB70D2211F57B001009A8 /* UninitializedBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UninitializedBlock.swift; sourceTree = "<group>"; };
+		4F8CB70F2211F695001009A8 /* Point.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Point.swift; sourceTree = "<group>"; };
+		4F8CB7112211F6B6001009A8 /* Dungeon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dungeon.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,8 +56,20 @@
 			children = (
 				4F8CB7012211F438001009A8 /* DungeonBuilder.h */,
 				4F8CB7022211F438001009A8 /* Info.plist */,
+				4F8CB70A2211F543001009A8 /* Blocks */,
+				4F8CB7112211F6B6001009A8 /* Dungeon.swift */,
+				4F8CB70F2211F695001009A8 /* Point.swift */,
 			);
 			path = DungeonBuilder;
+			sourceTree = "<group>";
+		};
+		4F8CB70A2211F543001009A8 /* Blocks */ = {
+			isa = PBXGroup;
+			children = (
+				4F8CB70B2211F557001009A8 /* Block.swift */,
+				4F8CB70D2211F57B001009A8 /* UninitializedBlock.swift */,
+			);
+			path = Blocks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -95,6 +115,7 @@
 				TargetAttributes = {
 					4F8CB6FD2211F438001009A8 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1010;
 					};
 				};
 			};
@@ -130,6 +151,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4F8CB7122211F6B6001009A8 /* Dungeon.swift in Sources */,
+				4F8CB70C2211F557001009A8 /* Block.swift in Sources */,
+				4F8CB70E2211F57B001009A8 /* UninitializedBlock.swift in Sources */,
+				4F8CB7102211F695001009A8 /* Point.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,6 +286,7 @@
 		4F8CB7072211F438001009A8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -277,6 +303,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.piercecorp.DungeonBuilder;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -285,6 +312,7 @@
 		4F8CB7082211F438001009A8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
