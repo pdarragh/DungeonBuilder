@@ -41,7 +41,7 @@ public class Dungeon {
     let maxRoomWidth: Int
     let minRoomHeight: Int = MIN_ROOM_HEIGHT
     let maxRoomHeight: Int
-    var blocks: [[Block]]  // y-indexed first, then x-indexed; (0, 0) is the bottom-left corner
+    var blocks: [[Block]]  // y-indexed first, then x-indexed; (0, 0) is the bottom-left corner, so all coordinates have positive values
     public let width: Int
     public let height: Int
 
@@ -103,5 +103,56 @@ public class Dungeon {
 
     private func setBlockAt(x: Int, y: Int, toValue block: Block) {
         blocks[y][x] = block  // y-indexed first, then x-indexed
+    }
+
+    private class Room {
+        let bottomLeftCorner: Point
+        let bottomRightCorner: Point
+        let topLeftCorner: Point
+        let topRightCorner: Point
+        let corners: [Point]
+
+        init(bottomLeftCorner: Point, bottomRightCorner: Point, topLeftCorner: Point, topRightCorner: Point) {
+            self.bottomLeftCorner = bottomLeftCorner
+            self.bottomRightCorner = bottomRightCorner
+            self.topLeftCorner = topLeftCorner
+            self.topRightCorner = topRightCorner
+            self.corners = [self.bottomLeftCorner, self.bottomRightCorner, self.topLeftCorner, self.topRightCorner]
+        }
+
+        func leftX() -> Int {
+            return self.bottomLeftCorner.x  // This is identical to topLeftCorner.x.
+        }
+
+        func rightX() -> Int {
+            return self.bottomRightCorner.x  // This is identical to topRightCorner.x.
+        }
+
+        func bottomY() -> Int {
+            return self.bottomLeftCorner.y  // This is identical to bottomRightCorner.y.
+        }
+
+        func topY() -> Int {
+            return self.topLeftCorner.y  // This is identical to topRightCorner.y.
+        }
+
+        func containsPoint(_ point: Point) -> Bool {
+            // It is assumed that the bottom-left is the least-valued corner (i.e., is the closest to the origin).
+            return point.x >= leftX() && point.x <= rightX() && point.y >= bottomY() && point.y <= topY()
+        }
+
+        static func overlapsWith(lhs: Room, rhs: Room) -> Bool {
+            for lPoint in lhs.corners {
+                if rhs.containsPoint(lPoint) {
+                    return true
+                }
+            }
+            for rPoint in rhs.corners {
+                if lhs.containsPoint(rPoint) {
+                    return true
+                }
+            }
+            return false
+        }
     }
 }
