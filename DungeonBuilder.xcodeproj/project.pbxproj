@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4F26D24F22120165009F7F04 /* EmptyBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F26D24E22120165009F7F04 /* EmptyBlock.swift */; };
+		4F7ABEEA2213608F009F3EA7 /* DungeonBitmapRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7ABEE92213608F009F3EA7 /* DungeonBitmapRenderer.swift */; };
 		4F8CB7032211F438001009A8 /* DungeonBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 4F8CB7012211F438001009A8 /* DungeonBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4F8CB70C2211F557001009A8 /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8CB70B2211F557001009A8 /* Block.swift */; };
 		4F8CB70E2211F57B001009A8 /* UninitializedBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8CB70D2211F57B001009A8 /* UninitializedBlock.swift */; };
@@ -17,6 +18,7 @@
 
 /* Begin PBXFileReference section */
 		4F26D24E22120165009F7F04 /* EmptyBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyBlock.swift; sourceTree = "<group>"; };
+		4F7ABEE92213608F009F3EA7 /* DungeonBitmapRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DungeonBitmapRenderer.swift; sourceTree = "<group>"; };
 		4F8CB6FE2211F438001009A8 /* DungeonBuilder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DungeonBuilder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F8CB7012211F438001009A8 /* DungeonBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DungeonBuilder.h; sourceTree = "<group>"; };
 		4F8CB7022211F438001009A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -61,6 +63,7 @@
 				4F8CB70A2211F543001009A8 /* Blocks */,
 				4F8CB7112211F6B6001009A8 /* Dungeon.swift */,
 				4F8CB70F2211F695001009A8 /* Point.swift */,
+				4F7ABEE92213608F009F3EA7 /* DungeonBitmapRenderer.swift */,
 			);
 			path = DungeonBuilder;
 			sourceTree = "<group>";
@@ -158,6 +161,7 @@
 				4F8CB70C2211F557001009A8 /* Block.swift in Sources */,
 				4F8CB70E2211F57B001009A8 /* UninitializedBlock.swift in Sources */,
 				4F8CB7102211F695001009A8 /* Point.swift in Sources */,
+				4F7ABEEA2213608F009F3EA7 /* DungeonBitmapRenderer.swift in Sources */,
 				4F26D24F22120165009F7F04 /* EmptyBlock.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
