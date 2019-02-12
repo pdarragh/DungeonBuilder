@@ -1,6 +1,6 @@
 //
 //  Point.swift
-//  Trench Digger iOS
+//  DungeonBuilder
 //
 //  Created by Pierce Darragh on 2/7/19.
 //  Copyright © 2019 Pierce Corp. All rights reserved.

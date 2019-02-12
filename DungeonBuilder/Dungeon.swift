@@ -1,6 +1,6 @@
 //
 //  Dungeon.swift
-//  Trench Digger iOS
+//  DungeonBuilder
 //
 //  Created by Pierce Darragh on 2/7/19.
 //  Copyright © 2019 Pierce Corp. All rights reserved.
@@ -57,7 +57,7 @@ public class Dungeon {
         // Generate uninitialized blocks to populate the list.
         let xRange = 0 ..< width
         let yRange = 0 ..< height
-        blocks = yRange.map { _ in xRange.map { _ in UninitializedBlock() }}
+        blocks = yRange.map { y in xRange.map { x in Block(type: .Uninitialized, x: x, y: y) }}
         // Begin excavation.
         excavate()
     }
@@ -72,14 +72,14 @@ public class Dungeon {
 
     private func excavate() {
         generateRooms().forEach{ room in
-            fill(from: room.bottomLeftCorner, to: room.topRightCorner, withBlockType: EmptyBlock.self)
+            fill(from: room.bottomLeftCorner, to: room.topRightCorner, withBlockType: .Empty)
         }
     }
 
-    private func fill(from pointA: Point, to pointB: Point, withBlockType blockType: Block.Type) {
+    private func fill(from pointA: Point, to pointB: Point, withBlockType blockType: BlockType) {
         for y in pointA.y ... pointB.y {
             for x in pointA.x ... pointB.x {
-                setBlockAt(x: x, y: y, toValue: blockType.init())
+                setBlockAt(x: x, y: y, toValue: Block(type: blockType, x: x, y: y))
             }
         }
     }

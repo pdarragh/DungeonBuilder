@@ -6,7 +6,6 @@
 //  Copyright © 2019 Pierce Corp. All rights reserved.
 //
 
-
 private struct PixelData {
     var a: UInt8
     var r: UInt8
@@ -36,13 +35,11 @@ public class DungeonBitmapRenderer {
     }
 
     private static func getPixelForBlock(_ block: Block) -> PixelData {
-        switch block {
-        case is UninitializedBlock:
+        switch block.type {
+        case .Uninitialized:
             return PixelData.Black
-        case is EmptyBlock:
+        case .Empty:
             return PixelData.White
-        default:
-            fatalError("Unknown block type: \(block)")
         }
     }
 }
