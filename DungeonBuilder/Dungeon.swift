@@ -154,5 +154,9 @@ public class Dungeon {
             }
             return false
         }
+
+        func overlapsWith(other: Room) -> Bool {
+            return Room.overlapsWith(lhs: self, rhs: other)
+        }
     }
 }
