@@ -64,19 +64,9 @@ public class Dungeon {
     }
 
     private func excavate() {
-        for _ in 0 ..< 5 {
-            let startPoint = Point.generateRandomPoint(xMin: 0, xMax: width - maxRoomWidth, yMin: 0, yMax: height - maxRoomHeight)
-            excavateRoomStartingAtPoint(startPoint)
+        generateRooms().forEach{ room in
+            fill(from: room.bottomLeftCorner, to: room.topRightCorner, withBlockType: EmptyBlock.self)
         }
-    }
-
-    private func excavateRoomStartingAtPoint(_ start: Point) {
-        let roomWidth = Int.random(in: minRoomWidth ... maxRoomWidth)
-        let roomHeight = Int.random(in: minRoomHeight ... maxRoomHeight)
-        // The starting block is the bottom-left corner of the room. Move rightwards and upwards.
-        let end = Point(start.x + roomWidth, start.y + roomHeight)
-        // Fill the rectangle with empty blocks.
-        fill(from: start, to: end, withBlockType: EmptyBlock.self)
     }
 
     private func fill(from pointA: Point, to pointB: Point, withBlockType blockType: Block.Type) {
