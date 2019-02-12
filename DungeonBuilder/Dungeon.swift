@@ -35,7 +35,6 @@ let MIN_ROOM_HEIGHT = 5
 
  */
 
-
 public class Dungeon {
     let minRoomWidth: Int = MIN_ROOM_WIDTH
     let maxRoomWidth: Int

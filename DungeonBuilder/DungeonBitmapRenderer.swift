@@ -14,23 +14,14 @@ private struct PixelData {
     var b: UInt8
 
     static let size = MemoryLayout<PixelData>.size
-}
 
+    static let Black = PixelData(a: 255, r: 0, g: 0, b: 0)
+    static let White = PixelData(a: 255, r: 255, g: 255, b: 255)
+}
 
 public class DungeonBitmapRenderer {
     public static func generateImageRepresentation(ofDungeon dungeon: Dungeon) -> UIImage? {
-        let blackPixel = PixelData(a: 255, r: 0, g: 0, b: 0)
-        let whitePixel = PixelData(a: 255, r: 255, g: 255, b: 255)
-        let pixels = dungeon.flatMapBlocks { (block) -> PixelData in
-            switch block {
-            case is UninitializedBlock:
-                return blackPixel
-            case is EmptyBlock:
-                return whitePixel
-            default:
-                fatalError("Unknown block type: \(block).")
-            }
-        }
+        let pixels = dungeon.flatMapBlocks(getPixelForBlock)
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue)
         guard let provider = CGDataProvider.init(data: NSData(bytes: pixels, length: pixels.count * PixelData.size)) else {
@@ -42,5 +33,16 @@ public class DungeonBitmapRenderer {
             return nil
         }
         return UIImage(cgImage: cgImage)
+    }
+
+    private static func getPixelForBlock(_ block: Block) -> PixelData {
+        switch block {
+        case is UninitializedBlock:
+            return PixelData.Black
+        case is EmptyBlock:
+            return PixelData.White
+        default:
+            fatalError("Unknown block type: \(block)")
+        }
     }
 }

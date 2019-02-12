@@ -62,8 +62,8 @@
 				4F8CB7022211F438001009A8 /* Info.plist */,
 				4F8CB70A2211F543001009A8 /* Blocks */,
 				4F8CB7112211F6B6001009A8 /* Dungeon.swift */,
-				4F8CB70F2211F695001009A8 /* Point.swift */,
 				4F7ABEE92213608F009F3EA7 /* DungeonBitmapRenderer.swift */,
+				4F8CB70F2211F695001009A8 /* Point.swift */,
 			);
 			path = DungeonBuilder;
 			sourceTree = "<group>";
