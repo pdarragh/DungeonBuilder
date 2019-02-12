@@ -40,4 +40,12 @@ public class Point: Comparable, CustomStringConvertible {
     public static func < (lhs: Point, rhs: Point) -> Bool {
         return distance(lhs: Origin, rhs: lhs) < distance(lhs: Origin, rhs: rhs)
     }
+
+    public static func + (lhs: Point, rhs: Point) -> Point {
+        return Point(lhs.x + rhs.x, lhs.y + rhs.y)
+    }
+
+    public static func - (lhs: Point, rhs: Point) -> Point {
+        return Point(lhs.x - rhs.x, lhs.y - rhs.y)
+    }
 }
