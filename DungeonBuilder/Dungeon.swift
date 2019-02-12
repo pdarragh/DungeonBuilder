@@ -105,12 +105,51 @@ public class Dungeon {
         blocks[y][x] = block  // y-indexed first, then x-indexed
     }
 
+    private func generateRooms() -> [Room] {
+        let attempts = 100
+        let maxRooms = 10
+        var rooms: [Room] = []
+        for _ in 0 ..< attempts {
+            let newRoom = generateRoom()
+            var roomOverlaps = false
+            for room in rooms {
+                if newRoom.overlapsWith(other: room) {
+                    roomOverlaps = true
+                    break
+                }
+            }
+            if roomOverlaps {
+                continue
+            }
+            rooms.append(newRoom)
+            if rooms.count >= maxRooms {
+                break
+            }
+        }
+        return rooms
+    }
+
+    private func generateRoom() -> Room {
+        let start = Point.generateRandomPoint(xMin: 0, xMax: width - 1, yMin: 0, yMax: height - 1)
+        let roomWidth = Int.random(in: minRoomWidth ... maxRoomWidth)
+        let roomHeight = Int.random(in: minRoomHeight ... maxRoomHeight)
+        let end = Point(start.x + roomWidth, start.y + roomHeight)
+        let room = Dungeon.Room(bottomLeftCorner: start, topRightCorner: end)
+        return room
+    }
+
     private class Room {
         let bottomLeftCorner: Point
         let bottomRightCorner: Point
         let topLeftCorner: Point
         let topRightCorner: Point
         let corners: [Point]
+
+        convenience init(bottomLeftCorner: Point, topRightCorner: Point) {
+            let bottomRightCorner = Point(topRightCorner.x, bottomLeftCorner.y)
+            let topLeftCorner = Point(bottomLeftCorner.x, topRightCorner.y)
+            self.init(bottomLeftCorner: bottomLeftCorner, bottomRightCorner: bottomRightCorner, topLeftCorner: topLeftCorner, topRightCorner: topRightCorner)
+        }
 
         init(bottomLeftCorner: Point, bottomRightCorner: Point, topLeftCorner: Point, topRightCorner: Point) {
             self.bottomLeftCorner = bottomLeftCorner
