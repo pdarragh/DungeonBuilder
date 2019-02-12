@@ -6,7 +6,7 @@
 //  Copyright © 2019 Pierce Corp. All rights reserved.
 //
 
-public class Point: Comparable, CustomStringConvertible {
+public struct Point: Comparable, CustomStringConvertible {
     public static let Origin = Point(0, 0)
 
     public let x: Int
