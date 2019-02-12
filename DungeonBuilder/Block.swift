@@ -8,12 +8,14 @@
 
 public enum BlockType {
     case Uninitialized
-    case Empty
+    case EmptyRoom
+    case EmptyPassage
 
     public var traversable: Bool {
         switch self {
         case .Uninitialized: return false
-        case .Empty: return true
+        case .EmptyRoom: return true
+        case .EmptyPassage: return true
         }
     }
 }

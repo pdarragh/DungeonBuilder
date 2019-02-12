@@ -15,6 +15,7 @@ private struct PixelData {
     static let size = MemoryLayout<PixelData>.size
 
     static let Black = PixelData(a: 255, r: 0, g: 0, b: 0)
+    static let Gray = PixelData(a: 255, r: 122, g: 122, b: 122)
     static let White = PixelData(a: 255, r: 255, g: 255, b: 255)
 }
 
@@ -37,9 +38,11 @@ public class DungeonBitmapRenderer {
     private static func getPixelForBlock(_ block: Block) -> PixelData {
         switch block.type {
         case .Uninitialized:
-            return PixelData.Black
-        case .Empty:
-            return PixelData.White
+            return .Black
+        case .EmptyRoom:
+            return .White
+        case .EmptyPassage:
+            return .Gray
         }
     }
 }
