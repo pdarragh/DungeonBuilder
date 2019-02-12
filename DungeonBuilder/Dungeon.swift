@@ -63,6 +63,14 @@ public class Dungeon {
         excavate()
     }
 
+    public func flatMapBlocks<T>(_ transform: ((Block) -> T)) -> [T] {
+        return blocks.flatMap { $0.map { transform($0) } }
+    }
+
+    public func forEachBlock(_ body: ((Block) -> Void)) {
+        blocks.forEach{ $0.forEach { body($0) } }
+    }
+
     private func excavate() {
         generateRooms().forEach{ room in
             fill(from: room.bottomLeftCorner, to: room.topRightCorner, withBlockType: EmptyBlock.self)
