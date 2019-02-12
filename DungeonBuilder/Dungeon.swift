@@ -120,9 +120,9 @@ public class Dungeon {
     }
 
     private func generateRoom() -> Room {
-        let start = Point.generateRandomPoint(xMin: 0, xMax: width - 1, yMin: 0, yMax: height - 1)
         let roomWidth = Int.random(in: minRoomWidth ... maxRoomWidth)
         let roomHeight = Int.random(in: minRoomHeight ... maxRoomHeight)
+        let start = Point.generateRandomPoint(xMin: 0, xMax: width - 1 - roomWidth, yMin: 0, yMax: height - 1 - roomHeight)
         let end = Point(start.x + roomWidth, start.y + roomHeight)
         let room = Dungeon.Room(bottomLeftCorner: start, topRightCorner: end)
         return room
