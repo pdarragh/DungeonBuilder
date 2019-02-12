@@ -135,14 +135,14 @@ public class Dungeon {
         return room
     }
 
-    private class Room {
+    private struct Room {
         let bottomLeftCorner: Point
         let bottomRightCorner: Point
         let topLeftCorner: Point
         let topRightCorner: Point
         let corners: [Point]
 
-        convenience init(bottomLeftCorner: Point, topRightCorner: Point) {
+        init(bottomLeftCorner: Point, topRightCorner: Point) {
             let bottomRightCorner = Point(topRightCorner.x, bottomLeftCorner.y)
             let topLeftCorner = Point(bottomLeftCorner.x, topRightCorner.y)
             self.init(bottomLeftCorner: bottomLeftCorner, bottomRightCorner: bottomRightCorner, topLeftCorner: topLeftCorner, topRightCorner: topRightCorner)
