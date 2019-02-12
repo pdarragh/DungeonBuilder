@@ -6,11 +6,13 @@
 //  Copyright © 2019 Pierce Corp. All rights reserved.
 //
 
-public class Point: Comparable {
+public class Point: Comparable, CustomStringConvertible {
     public static let Origin = Point(0, 0)
 
     public let x: Int
     public let y: Int
+
+    public var description: String { return "(\(self.x), \(self.y))" }
 
     init(_ x: Int, _ y: Int) {
         self.x = x
@@ -37,9 +39,5 @@ public class Point: Comparable {
 
     public static func < (lhs: Point, rhs: Point) -> Bool {
         return distance(lhs: Origin, rhs: lhs) < distance(lhs: Origin, rhs: rhs)
-    }
-
-    public func toString() -> String {
-        return "(\(self.x), \(self.y))"
     }
 }
