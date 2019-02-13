@@ -28,8 +28,8 @@ public struct Point: Comparable, CustomStringConvertible {
     }
 
     /// Produces a list of the current point and its neighboring points up to `size` points away.
-    public func neighborhood(ofSize size: Int = 1) -> [Point] {
-        return (-size ... size).flatMap { x in (-size ... size).map { y in self + Point(x, y) } }
+    public func neighborhood(ofRadius size: Int = 1) -> Neighborhood {
+        return Neighborhood(bottomLeftCorner: self + (Point.SouthWestUnit * size), topRightCorner: self + (Point.NorthEastUnit * size))
     }
 
     static func generateRandom(xMin: Int, xMax: Int, yMin: Int, yMax: Int) -> Point {
