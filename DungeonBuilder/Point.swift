@@ -61,4 +61,16 @@ public struct Point: Comparable, CustomStringConvertible {
     public static func - (lhs: Point, rhs: Point) -> Point {
         return Point(lhs.x - rhs.x, lhs.y - rhs.y)
     }
+
+    public static func * (lhs: Point, rhs: Point) -> Point {
+        return Point(lhs.x * rhs.x, lhs.y * rhs.y)
+    }
+
+    public static func * (point: Point, scalar: Int) -> Point {
+        return Point(point.x * scalar, point.y * scalar)
+    }
+
+    public static func * (scalar: Int, point: Point) -> Point {
+        return point * scalar
+    }
 }
