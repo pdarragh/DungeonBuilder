@@ -8,6 +8,14 @@
 
 public struct Point: Comparable, CustomStringConvertible {
     public static let Origin = Point(0, 0)
+    public static let NorthUnit = Point(0, 1)
+    public static let NorthEastUnit = Point(1, 1)
+    public static let EastUnit = Point(1, 0)
+    public static let SouthEastUnit = Point(1, -1)
+    public static let SouthUnit = Point(0, -1)
+    public static let SouthWestUnit = Point(-1, -1)
+    public static let WestUnit = Point(-1, 0)
+    public static let NorthWestUnit = Point(-1, 1)
 
     public let x: Int
     public let y: Int
