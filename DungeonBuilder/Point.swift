@@ -29,14 +29,18 @@ public struct Point: Comparable, CustomStringConvertible, DirectionIndexable {
         self.y = y
     }
 
+    static func getUnitPointForDirection(_ direction: Direction) -> Point {
+        switch direction {
+        case .North: return Point.NorthUnit
+        case .East: return Point.EastUnit
+        case .South: return Point.SouthUnit
+        case .West: return Point.WestUnit
+        }
+    }
+
     /// Returns a point adjacent to the current point in the indicated direction.
     func getElementForDirection(_ direction: Direction) -> Point {
-        switch direction {
-        case .North: return self + Point.NorthUnit
-        case .East: return self + Point.EastUnit
-        case .South: return self + Point.SouthUnit
-        case .West: return self + Point.WestUnit
-        }
+        return self + Point.getUnitPointForDirection(direction)
     }
 
     /// Produces a list of the current point and its neighboring points up to `size` points away.
