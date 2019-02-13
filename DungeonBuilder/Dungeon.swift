@@ -70,9 +70,20 @@ public class Dungeon {
         blocks.forEach{ $0.forEach { body($0) } }
     }
 
+    public func forEachPoint(_ body: ((Point) -> Void)) {
+        for y in 0 ..< height {
+            for x in 0 ..< width {
+                body(Point(x, y))
+            }
+        }
+    }
+
     private func excavate() {
         generateRooms().forEach{ room in
-            fill(from: room.bottomLeftCorner, to: room.topRightCorner, withBlockType: .Empty)
+            fill(from: room.bottomLeftCorner, to: room.topRightCorner, withBlockType: .EmptyRoom)
+        }
+        forEachPoint { point in
+            generateMazeFromPoint(point: point)
         }
     }
 
@@ -81,6 +92,36 @@ public class Dungeon {
             for x in pointA.x ... pointB.x {
                 setBlockAt(x: x, y: y, toValue: Block(type: blockType, x: x, y: y))
             }
+        }
+    }
+
+    private func generateMazeFromPoint(point: Point) {
+        // Determine which points (including the current one) are actually valid. This depends on two factors:
+        //   1. The point exists within the map (not out of bounds).
+        //   2. The block at the point is uninitialized.
+        let validPoints = point.neighborhood().filter { otherPoint in blockAt(point: otherPoint) != nil }
+        guard validPoints.filter({ otherPoint in blockAt(point: otherPoint)!.type == .Uninitialized }).count == validPoints.count else {
+            return
+        }
+        // Start at the current point, then begin digging.
+        var maybeCurr: Point? = point
+        while let curr = maybeCurr {
+            // Pick a random direction and peek two blocks in that direction from here. If those two blocks are uninitialized, we can use that direction.
+            guard let direction = (Direction.allCases.filter { direction in
+                let offset = direction.toUnitPoint()
+                let next = curr + offset
+                let nextNext = next + offset
+                return blockAt(point: next)?.type == .Uninitialized && blockAt(point: nextNext)?.type == .Uninitialized
+            }).randomElement() else {
+                // If there are no valid directions, end the cycle.
+                // TODO: Implement backtracking to find last position with valid directions and resume from there.
+                maybeCurr = nil
+                continue
+            }
+            // Dig a passage here, then move forward to the next block.
+            let next = curr + direction.toUnitPoint()
+            setBlockAt(point: next, toType: .EmptyPassage)
+            maybeCurr = next
         }
     }
 
@@ -201,7 +242,7 @@ private struct Room {
     }
 }
 
-private enum Direction: Int, RandomlyGeneratable {
+private enum Direction: Int, RandomlyGeneratable, CaseIterable {
     case North = 0
     case East = 1
     case South = 2
