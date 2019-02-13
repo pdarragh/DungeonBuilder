@@ -6,7 +6,9 @@
 //  Copyright © 2019 Pierce Corp. All rights reserved.
 //
 
-struct Neighborhood {
+struct Neighborhood: Directional {
+    typealias Member = Point
+
     let bottomLeftCorner: Point
     let bottomRightCorner: Point
     let topLeftCorner: Point
@@ -23,6 +25,11 @@ struct Neighborhood {
     var rightEdge: [Point] { return (bottomY ... topY).map { y in Point(rightX, y) } }
     var bottomEdge: [Point] { return (leftX ... rightX).map { x in Point(x, bottomY) } }
     var topEdge: [Point] { return (leftX ... rightX).map { x in Point(x, topY) } }
+
+    var northSide: [Point] { return self.topEdge }
+    var eastSide: [Point] { return self.rightEdge }
+    var southSide: [Point] { return self.bottomEdge }
+    var westSide: [Point] { return self.leftEdge }
 
     init(bottomLeftCorner: Point, topRightCorner: Point) {
         let bottomRightCorner = Point(topRightCorner.x, bottomLeftCorner.y)

@@ -25,3 +25,23 @@ enum Direction: Int, CaseIterable {
         }
     }
 }
+
+protocol Directional {
+    associatedtype Member
+
+    var northSide: [Member] { get }
+    var eastSide: [Member] { get }
+    var southSide: [Member] { get }
+    var westSide: [Member] { get }
+}
+
+extension Directional {
+    func getSideForDirection(_ direction: Direction) -> [Member] {
+        switch direction {
+        case .North: return northSide
+        case .East: return eastSide
+        case .South: return southSide
+        case .West: return westSide
+        }
+    }
+}
