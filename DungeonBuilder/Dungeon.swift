@@ -84,7 +84,7 @@ public class Dungeon {
         }
     }
 
-    public func getBlockAt(x: Int, y: Int) -> Block? {
+    public func blockAt(x: Int, y: Int) -> Block? {
         guard x >= 0 && x < width else {
             return nil
         }
@@ -94,8 +94,8 @@ public class Dungeon {
         return blocks[y][x]  // y-indexed first, then x-indexed
     }
 
-    public func getBlockAt(point: Point) -> Block? {
-        return getBlockAt(x: point.x, y: point.y)
+    public func blockAt(point: Point) -> Block? {
+        return blockAt(x: point.x, y: point.y)
     }
 
     private func setBlockAt(x: Int, y: Int, toValue block: Block) {
