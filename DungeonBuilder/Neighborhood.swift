@@ -7,7 +7,7 @@
 //
 
 struct Neighborhood: DirectionIndexable {
-    typealias DirectionalElement = [Point]
+    typealias DirectionalElement = Neighborhood
 
     let bottomLeftCorner: Point
     let bottomRightCorner: Point
@@ -23,15 +23,15 @@ struct Neighborhood: DirectionIndexable {
     var bottomY: Int { return self.bottomLeftCorner.y }  // Identical to bottomRightCorner.y
     var topY: Int { return self.topLeftCorner.y }        // Identical to topRightCorner.y
 
-    var leftEdge: [Point] { return (bottomY ... topY).map { y in Point(leftX, y) } }
-    var rightEdge: [Point] { return (bottomY ... topY).map { y in Point(rightX, y) } }
-    var bottomEdge: [Point] { return (leftX ... rightX).map { x in Point(x, bottomY) } }
-    var topEdge: [Point] { return (leftX ... rightX).map { x in Point(x, topY) } }
+    var leftNeighborhood: Neighborhood { return Neighborhood(bottomLeftCorner: Point(leftX, bottomY), topRightCorner: Point(leftX, topY)) }
+    var rightNeighborhood: Neighborhood { return Neighborhood(bottomLeftCorner: Point(rightX, bottomY), topRightCorner: Point(rightX, topY)) }
+    var bottomNeighborhood: Neighborhood { return Neighborhood(bottomLeftCorner: Point(leftX, bottomY), topRightCorner: Point(rightX, bottomY)) }
+    var topNeighborhood: Neighborhood { return Neighborhood(bottomLeftCorner: Point(leftX, topY), topRightCorner: Point(rightX, topY)) }
 
-    var north: [Point] { return self.topEdge }
-    var east:  [Point] { return self.rightEdge }
-    var south: [Point] { return self.bottomEdge }
-    var west:  [Point] { return self.leftEdge }
+    var north: Neighborhood { return self.topNeighborhood }
+    var east:  Neighborhood { return self.rightNeighborhood }
+    var south: Neighborhood { return self.bottomNeighborhood }
+    var west:  Neighborhood { return self.leftNeighborhood }
 
     init(bottomLeftCorner: Point, topRightCorner: Point) {
         let bottomRightCorner = Point(topRightCorner.x, bottomLeftCorner.y)
@@ -40,9 +40,9 @@ struct Neighborhood: DirectionIndexable {
     }
 
     init(bottomLeftCorner: Point, bottomRightCorner: Point, topLeftCorner: Point, topRightCorner: Point) {
-        guard (bottomLeftCorner < topLeftCorner && bottomLeftCorner < bottomRightCorner && bottomLeftCorner < topRightCorner &&
-               topRightCorner > topLeftCorner && topRightCorner > bottomRightCorner && topRightCorner > bottomLeftCorner) else {
-            fatalError("Neighborhoods must be oriented such that the bottom-left corner is the closest to the origin.")
+        guard (bottomLeftCorner <= topLeftCorner && bottomLeftCorner <= bottomRightCorner && bottomLeftCorner <= topRightCorner &&
+               topRightCorner >= topLeftCorner && topRightCorner >= bottomRightCorner && topRightCorner >= bottomLeftCorner) else {
+            fatalError("Neighborhoods must be oriented such that the bottom-left corner is the closest to the origin and the top-right corner is farthest.")
         }
         self.bottomLeftCorner = bottomLeftCorner
         self.bottomRightCorner = bottomRightCorner
@@ -50,12 +50,18 @@ struct Neighborhood: DirectionIndexable {
         self.topRightCorner = topRightCorner
     }
 
-    func getElementForDirection(_ direction: Direction) -> [Point] {
+    func getElementForDirection(_ direction: Direction) -> Neighborhood {
         switch direction {
         case .North: return north
         case .East: return east
         case .South: return south
         case .West: return west
+        }
+    }
+
+    func getDirectionalEdges() -> [(Direction, Neighborhood)] {
+        return Direction.allCases.map { direction in
+            return (direction, self.getElementForDirection(direction))
         }
     }
 
