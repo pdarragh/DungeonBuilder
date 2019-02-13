@@ -82,11 +82,15 @@ public class Dungeon {
 
     private func excavate() {
         generateRooms().forEach{ room in
-            fill(from: room.bottomLeftCorner, to: room.topRightCorner, withBlockType: .EmptyRoom)
+            fill(in: room, withBlockType: .EmptyRoom)
         }
         forEachPoint { point in
-            generateMazeFromPoint(point: point)
+            generatePassageFromPoint(point: point, passageWidth: 3, minimumGap: 1)
         }
+    }
+
+    private func fill(in room: Room, withBlockType blockType: BlockType) {
+        fill(from: room.bottomLeftCorner, to: room.topRightCorner, withBlockType: blockType)
     }
 
     private func fill(from pointA: Point, to pointB: Point, withBlockType blockType: BlockType) {
@@ -97,33 +101,54 @@ public class Dungeon {
         }
     }
 
-    private func generateMazeFromPoint(point: Point) {
+    private func generatePassageFromPoint(point: Point, passageWidth: Int, minimumGap: Int) {
         // Determine which points (including the current one) are actually valid. This depends on two factors:
-        //   1. The point exists within the map (not out of bounds).
-        //   2. The block at the point is uninitialized.
-        let validPoints = point.neighborhood().filter { otherPoint in blockAt(point: otherPoint) != nil }
-        guard validPoints.filter({ otherPoint in blockAt(point: otherPoint)!.type == .Uninitialized }).count == validPoints.count else {
+        //   1. Each point exists within the map (not out of bounds).
+        //   2. The block at each point is uninitialized.
+        let radius = (passageWidth - (passageWidth % 2)) / 2
+        let neighborhood = point.neighborhood(ofRadius: radius)
+        guard neighborhood.points.allSatisfy({ blockAt(point: $0)?.type == .Uninitialized }) else {
             return
         }
-        // Start at the current point, then begin digging.
-        var maybeCurr: Point? = point
-        while let curr = maybeCurr {
-            // Pick a random direction and peek two blocks in that direction from here. If those two blocks are uninitialized, we can use that direction.
-            guard let direction = (Direction.allCases.filter { direction in
-                let offset = direction.toUnitPoint()
-                let next = curr + offset
-                let nextNext = next + offset
-                return blockAt(point: next)?.type == .Uninitialized && blockAt(point: nextNext)?.type == .Uninitialized
-            }).randomElement() else {
-                // If there are no valid directions, end the cycle.
-                // TODO: Implement backtracking to find last position with valid directions and resume from there.
-                maybeCurr = nil
-                continue
+        // Ensure the minimum gap is satisfied on all sides.
+        for scalar in 1 ... minimumGap {
+            let lookaheadPoints = neighborhood.getDirectionalEdges().flatMap { (direction, neighborhood) in
+                neighborhood.getElementForDirection(direction).points.map { $0 + (Point.getUnitPointForDirection(direction) * scalar) }
             }
-            // Dig a passage here, then move forward to the next block.
-            let next = curr + direction.toUnitPoint()
-            setBlockAt(point: next, toType: .EmptyPassage)
-            maybeCurr = next
+            guard lookaheadPoints.allSatisfy({ blockAt(point: $0)?.type == .Uninitialized }) else {
+                return
+            }
+        }
+        // Excavate the neighborhood.
+        fill(in: neighborhood, withBlockType: .EmptyPassage)
+        // Then excavate until we can't anymore.
+        var center: Point = point
+        while true {
+            let neighborhood = center.neighborhood(ofRadius: radius)
+            // Filter the edges to find only those which are valid for further excavation.
+            let validDirectionalEdges = neighborhood.getDirectionalEdges().filter({ (direction, edge) in
+                // Ensure a single step in the given direction would be acceptable.
+                guard edge.points.map({ $0 + (Point.getUnitPointForDirection(direction) * minimumGap) }).allSatisfy({ blockAt(point: $0)?.type == .Uninitialized }) else {
+                    return false
+                }
+                // Check that the gaps orthogonal to the given direction would be maintained.
+                return direction.orthogonal.allSatisfy({ orth in
+                    // For each orthogonal direction...
+                    return (1 ... minimumGap).allSatisfy({ scalar in
+                        edge.getElementForDirection(orth).points.allSatisfy({ point in
+                            blockAt(point: point + (Point.getUnitPointForDirection(orth) * scalar))?.type == .Uninitialized
+                        })
+                    })
+                })
+            })
+            // Pick a random direction to go.
+            guard let (digDirection, digEdge) = validDirectionalEdges.randomElement() else {
+                // There were no valid directions in which to dig.
+                return
+            }
+            // A direction has been selected. Perform the excavation.
+            fill(in: digEdge, withBlockType: .EmptyPassage)
+            center = center.getElementForDirection(digDirection)
         }
     }
 
