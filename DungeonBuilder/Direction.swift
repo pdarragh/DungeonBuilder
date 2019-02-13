@@ -24,6 +24,22 @@ enum Direction: Int, CaseIterable {
         case .West: return Point(-1, 0)
         }
     }
+
+    var opposite: Direction {
+        switch self {
+        case .North: return .South
+        case .East: return .West
+        case .South: return .North
+        case .West: return .East
+        }
+    }
+
+    var orthogonal: [Direction] {
+        switch self {
+        case .North, .South: return [.East, .West]
+        case .East, .West: return [.North, .South]
+        }
+    }
 }
 
 protocol DirectionIndexable {
