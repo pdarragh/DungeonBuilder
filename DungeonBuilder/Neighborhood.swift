@@ -6,7 +6,7 @@
 //  Copyright © 2019 Pierce Corp. All rights reserved.
 //
 
-public struct Neighborhood: Directional {
+struct Neighborhood: Directional {
     typealias Member = Point
 
     let bottomLeftCorner: Point

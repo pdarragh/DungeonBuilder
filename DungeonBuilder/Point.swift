@@ -28,7 +28,7 @@ public struct Point: Comparable, CustomStringConvertible {
     }
 
     /// Produces a list of the current point and its neighboring points up to `size` points away.
-    public func neighborhood(ofRadius size: Int = 1) -> Neighborhood {
+    func neighborhood(ofRadius size: Int = 1) -> Neighborhood {
         return Neighborhood(bottomLeftCorner: self + (Point.SouthWestUnit * size), topRightCorner: self + (Point.NorthEastUnit * size))
     }
 
