@@ -102,6 +102,10 @@ public class Dungeon {
         blocks[y][x] = block  // y-indexed first, then x-indexed
     }
 
+    private func setBlockAt(point: Point, toType type: BlockType) {
+        setBlockAt(x: point.x, y: point.y, toValue: Block(type: type, x: point.x, y: point.y))
+    }
+
     private func generateRooms() -> [Room] {
         let attempts = 100
         let maxRooms = 10
