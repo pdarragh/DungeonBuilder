@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4F7ABEEA2213608F009F3EA7 /* DungeonBitmapRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7ABEE92213608F009F3EA7 /* DungeonBitmapRenderer.swift */; };
+		4F7ABEEC22139CD2009F3EA7 /* RandomlyGeneratable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7ABEEB22139CD1009F3EA7 /* RandomlyGeneratable.swift */; };
 		4F8CB7032211F438001009A8 /* DungeonBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 4F8CB7012211F438001009A8 /* DungeonBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4F8CB70C2211F557001009A8 /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8CB70B2211F557001009A8 /* Block.swift */; };
 		4F8CB7102211F695001009A8 /* Point.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8CB70F2211F695001009A8 /* Point.swift */; };
@@ -16,6 +17,7 @@
 
 /* Begin PBXFileReference section */
 		4F7ABEE92213608F009F3EA7 /* DungeonBitmapRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DungeonBitmapRenderer.swift; sourceTree = "<group>"; };
+		4F7ABEEB22139CD1009F3EA7 /* RandomlyGeneratable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomlyGeneratable.swift; sourceTree = "<group>"; };
 		4F8CB6FE2211F438001009A8 /* DungeonBuilder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DungeonBuilder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F8CB7012211F438001009A8 /* DungeonBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DungeonBuilder.h; sourceTree = "<group>"; };
 		4F8CB7022211F438001009A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -60,6 +62,7 @@
 				4F8CB7112211F6B6001009A8 /* Dungeon.swift */,
 				4F7ABEE92213608F009F3EA7 /* DungeonBitmapRenderer.swift */,
 				4F8CB70F2211F695001009A8 /* Point.swift */,
+				4F7ABEEB22139CD1009F3EA7 /* RandomlyGeneratable.swift */,
 			);
 			path = DungeonBuilder;
 			sourceTree = "<group>";
@@ -146,6 +149,7 @@
 				4F8CB7122211F6B6001009A8 /* Dungeon.swift in Sources */,
 				4F8CB70C2211F557001009A8 /* Block.swift in Sources */,
 				4F8CB7102211F695001009A8 /* Point.swift in Sources */,
+				4F7ABEEC22139CD2009F3EA7 /* RandomlyGeneratable.swift in Sources */,
 				4F7ABEEA2213608F009F3EA7 /* DungeonBitmapRenderer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
