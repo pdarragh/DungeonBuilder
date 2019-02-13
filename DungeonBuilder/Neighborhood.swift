@@ -15,6 +15,8 @@ public struct Neighborhood: Directional {
     let topRightCorner: Point
 
     var corners: [Point] { return [self.bottomLeftCorner, self.bottomRightCorner, self.topLeftCorner, self.topRightCorner] }
+    var pointsGrid: [[Point]] { return (leftX ... rightX).map { x in (bottomY ... topY).map { y in Point(x, y) } } }
+    var points: [Point] { return pointsGrid.flatMap { $0 } }
 
     var leftX: Int { return self.bottomLeftCorner.x }    // Identical to topLeftCorner.x
     var rightX: Int { return self.bottomRightCorner.x }  // Identical to topRightCorner.x
@@ -38,6 +40,10 @@ public struct Neighborhood: Directional {
     }
 
     init(bottomLeftCorner: Point, bottomRightCorner: Point, topLeftCorner: Point, topRightCorner: Point) {
+        guard (bottomLeftCorner < topLeftCorner && bottomLeftCorner < bottomRightCorner && bottomLeftCorner < topRightCorner &&
+               topRightCorner > topLeftCorner && topRightCorner > bottomRightCorner && topRightCorner > bottomLeftCorner) else {
+            fatalError("Neighborhoods must be oriented such that the bottom-left corner is the closest to the origin.")
+        }
         self.bottomLeftCorner = bottomLeftCorner
         self.bottomRightCorner = bottomRightCorner
         self.topLeftCorner = topLeftCorner
