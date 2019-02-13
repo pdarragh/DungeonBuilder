@@ -241,23 +241,3 @@ private struct Room {
         return Room.overlapsWith(lhs: self, rhs: other)
     }
 }
-
-private enum Direction: Int, RandomlyGeneratable, CaseIterable {
-    case North = 0
-    case East = 1
-    case South = 2
-    case West = 3
-
-    static func generateRandom() -> Direction {
-        return Direction(rawValue: Int.random(in: 0 ... 3))!
-    }
-
-    func toUnitPoint() -> Point {
-        switch self {
-        case .North: return Point(0, 1)
-        case .East: return Point(1, 0)
-        case .South: return Point(0, -1)
-        case .West: return Point(-1, 0)
-        }
-    }
-}
