@@ -194,6 +194,11 @@ private struct Room {
     var bottomY: Int { return self.bottomLeftCorner.y }  // Identical to bottomRightCorner.y
     var topY: Int { return self.topLeftCorner.y }        // Identical to topRightCorner.y
 
+    var leftEdge: [Point] { return (bottomY ... topY).map { y in Point(leftX, y) } }
+    var rightEdge: [Point] { return (bottomY ... topY).map { y in Point(rightX, y) } }
+    var bottomEdge: [Point] { return (leftX ... rightX).map { x in Point(x, bottomY) } }
+    var topEdge: [Point] { return (leftX ... rightX).map { x in Point(x, topY) } }
+
     init(bottomLeftCorner: Point, topRightCorner: Point) {
         let bottomRightCorner = Point(topRightCorner.x, bottomLeftCorner.y)
         let topLeftCorner = Point(bottomLeftCorner.x, topRightCorner.y)
