@@ -19,7 +19,7 @@ public struct Point: Comparable, CustomStringConvertible {
         self.y = y
     }
 
-    static func generateRandomPoint(xMin: Int, xMax: Int, yMin: Int, yMax: Int) -> Point {
+    static func generateRandom(xMin: Int, xMax: Int, yMin: Int, yMax: Int) -> Point {
         return Point(Int.random(in: xMin ..< xMax), Int.random(in: yMin ..< yMax))
     }
 
