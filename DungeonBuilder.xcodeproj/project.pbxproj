@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4F4ADBF322149DD200E9122A /* InfiniteSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4ADBF222149DD200E9122A /* InfiniteSequence.swift */; };
+		4F4ADBF322149DD200E9122A /* CyclingSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4ADBF222149DD200E9122A /* CyclingSequence.swift */; };
 		4F7ABEEA2213608F009F3EA7 /* DungeonBitmapRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7ABEE92213608F009F3EA7 /* DungeonBitmapRenderer.swift */; };
 		4F85653A22148C0A006FCA61 /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F85653922148C0A006FCA61 /* Direction.swift */; };
 		4F85653C22148E99006FCA61 /* Neighborhood.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F85653B22148E99006FCA61 /* Neighborhood.swift */; };
@@ -18,7 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4F4ADBF222149DD200E9122A /* InfiniteSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfiniteSequence.swift; sourceTree = "<group>"; };
+		4F4ADBF222149DD200E9122A /* CyclingSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CyclingSequence.swift; sourceTree = "<group>"; };
 		4F7ABEE92213608F009F3EA7 /* DungeonBitmapRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DungeonBitmapRenderer.swift; sourceTree = "<group>"; };
 		4F85653922148C0A006FCA61 /* Direction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Direction.swift; sourceTree = "<group>"; };
 		4F85653B22148E99006FCA61 /* Neighborhood.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Neighborhood.swift; sourceTree = "<group>"; };
@@ -68,7 +68,7 @@
 				4F8CB70F2211F695001009A8 /* Point.swift */,
 				4F85653922148C0A006FCA61 /* Direction.swift */,
 				4F85653B22148E99006FCA61 /* Neighborhood.swift */,
-				4F4ADBF222149DD200E9122A /* InfiniteSequence.swift */,
+				4F4ADBF222149DD200E9122A /* CyclingSequence.swift */,
 			);
 			path = DungeonBuilder;
 			sourceTree = "<group>";
@@ -156,7 +156,7 @@
 				4F8CB70C2211F557001009A8 /* Block.swift in Sources */,
 				4F8CB7102211F695001009A8 /* Point.swift in Sources */,
 				4F85653C22148E99006FCA61 /* Neighborhood.swift in Sources */,
-				4F4ADBF322149DD200E9122A /* InfiniteSequence.swift in Sources */,
+				4F4ADBF322149DD200E9122A /* CyclingSequence.swift in Sources */,
 				4F85653A22148C0A006FCA61 /* Direction.swift in Sources */,
 				4F7ABEEA2213608F009F3EA7 /* DungeonBitmapRenderer.swift in Sources */,
 			);

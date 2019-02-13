@@ -1,17 +1,17 @@
 //
-//  InfiniteSequence.swift
+//  CyclingSequence.swift
 //  DungeonBuilder
 //
 //  Created by Pierce Darragh on 2/13/19.
 //  Copyright © 2019 Pierce Corp. All rights reserved.
 //
 
-public protocol InfiniteSequenceProtocol : Sequence {
+public protocol CyclingSequenceProtocol : Sequence {
     associatedtype Elements: Sequence = Self where Elements.Element == Element
 }
 
 @_fixed_layout
-public struct InfiniteSequence<Base> where Base : Collection {
+public struct CyclingSequence<Base> where Base : Collection {
     @usableFromInline
     internal var _base: Base
 
@@ -21,20 +21,20 @@ public struct InfiniteSequence<Base> where Base : Collection {
     }
 }
 
-extension InfiniteSequence: Sequence where Elements : Collection {
+extension CyclingSequence: Sequence where Elements : Collection {
     public typealias Element = Base.Element
-    public typealias Iterator = InfiniteIndexingIterator<Base>
+    public typealias Iterator = CyclingIndexingIterator<Base>
 
     public func makeIterator() -> Iterator {
         return Iterator(_elements: _base)
     }
 }
 
-extension InfiniteSequence: InfiniteSequenceProtocol where Base : Collection {
+extension CyclingSequence: CyclingSequenceProtocol where Base : Collection {
     public typealias Elements = Base
 }
 
-public struct InfiniteIndexingIterator<Elements : Collection> {
+public struct CyclingIndexingIterator<Elements : Collection> {
     @usableFromInline
     internal let _elements: Elements
     @usableFromInline
@@ -48,9 +48,9 @@ public struct InfiniteIndexingIterator<Elements : Collection> {
     }
 }
 
-extension InfiniteIndexingIterator: IteratorProtocol, Sequence {
+extension CyclingIndexingIterator: IteratorProtocol, Sequence {
     public typealias Element = Elements.Element
-    public typealias Iterator = InfiniteIndexingIterator<Elements>
+    public typealias Iterator = CyclingIndexingIterator<Elements>
 
     @inlinable
     @inline(__always)
@@ -67,7 +67,7 @@ extension InfiniteIndexingIterator: IteratorProtocol, Sequence {
 
 extension Collection {
     @inlinable
-    public var infinite: InfiniteSequence<Self> {
-        return InfiniteSequence(_base: self)
+    public var cycle: CyclingSequence<Self> {
+        return CyclingSequence(_base: self)
     }
 }
