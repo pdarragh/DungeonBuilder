@@ -27,21 +27,21 @@ enum Direction: Int, CaseIterable {
 }
 
 protocol Directional {
-    associatedtype Member
+    associatedtype DirectionalElement
 
-    var northSide: [Member] { get }
-    var eastSide: [Member] { get }
-    var southSide: [Member] { get }
-    var westSide: [Member] { get }
+    var north: DirectionalElement { get }
+    var east:  DirectionalElement { get }
+    var south: DirectionalElement { get }
+    var west:  DirectionalElement { get }
 }
 
 extension Directional {
-    func getSideForDirection(_ direction: Direction) -> [Member] {
+    func getSideForDirection(_ direction: Direction) -> DirectionalElement {
         switch direction {
-        case .North: return northSide
-        case .East: return eastSide
-        case .South: return southSide
-        case .West: return westSide
+        case .North: return north
+        case .East: return east
+        case .South: return south
+        case .West: return west
         }
     }
 }

@@ -7,7 +7,7 @@
 //
 
 struct Neighborhood: Directional {
-    typealias Member = Point
+    typealias DirectionalElement = [Point]
 
     let bottomLeftCorner: Point
     let bottomRightCorner: Point
@@ -28,10 +28,10 @@ struct Neighborhood: Directional {
     var bottomEdge: [Point] { return (leftX ... rightX).map { x in Point(x, bottomY) } }
     var topEdge: [Point] { return (leftX ... rightX).map { x in Point(x, topY) } }
 
-    var northSide: [Point] { return self.topEdge }
-    var eastSide: [Point] { return self.rightEdge }
-    var southSide: [Point] { return self.bottomEdge }
-    var westSide: [Point] { return self.leftEdge }
+    var north: [Point] { return self.topEdge }
+    var east:  [Point] { return self.rightEdge }
+    var south: [Point] { return self.bottomEdge }
+    var west:  [Point] { return self.leftEdge }
 
     init(bottomLeftCorner: Point, topRightCorner: Point) {
         let bottomRightCorner = Point(topRightCorner.x, bottomLeftCorner.y)
