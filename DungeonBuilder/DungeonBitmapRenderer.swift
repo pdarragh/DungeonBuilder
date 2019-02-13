@@ -17,6 +17,7 @@ private struct PixelData {
     static let Black = PixelData(a: 255, r: 0, g: 0, b: 0)
     static let Gray = PixelData(a: 255, r: 122, g: 122, b: 122)
     static let White = PixelData(a: 255, r: 255, g: 255, b: 255)
+    static let Red = PixelData(a: 255, r: 255, g: 0, b: 0)
 }
 
 public class DungeonBitmapRenderer {
@@ -42,7 +43,7 @@ public class DungeonBitmapRenderer {
         case .EmptyRoom:
             return .White
         case .EmptyPassage:
-            return .Gray
+            return .Red
         }
     }
 }
