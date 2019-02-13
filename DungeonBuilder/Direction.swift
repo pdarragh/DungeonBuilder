@@ -36,7 +36,7 @@ protocol Directional {
 }
 
 extension Directional {
-    func getSideForDirection(_ direction: Direction) -> DirectionalElement {
+    func getElementForDirection(_ direction: Direction) -> DirectionalElement {
         switch direction {
         case .North: return north
         case .East: return east
