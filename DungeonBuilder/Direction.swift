@@ -26,22 +26,8 @@ enum Direction: Int, CaseIterable {
     }
 }
 
-protocol Directional {
+protocol DirectionIndexable {
     associatedtype DirectionalElement
 
-    var north: DirectionalElement { get }
-    var east:  DirectionalElement { get }
-    var south: DirectionalElement { get }
-    var west:  DirectionalElement { get }
-}
-
-extension Directional {
-    func getElementForDirection(_ direction: Direction) -> DirectionalElement {
-        switch direction {
-        case .North: return north
-        case .East: return east
-        case .South: return south
-        case .West: return west
-        }
-    }
+    func getElementForDirection(_ direction: Direction) -> DirectionalElement
 }

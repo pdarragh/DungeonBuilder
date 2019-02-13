@@ -6,7 +6,7 @@
 //  Copyright © 2019 Pierce Corp. All rights reserved.
 //
 
-struct Neighborhood: Directional {
+struct Neighborhood: DirectionIndexable {
     typealias DirectionalElement = [Point]
 
     let bottomLeftCorner: Point
@@ -48,6 +48,15 @@ struct Neighborhood: Directional {
         self.bottomRightCorner = bottomRightCorner
         self.topLeftCorner = topLeftCorner
         self.topRightCorner = topRightCorner
+    }
+
+    func getElementForDirection(_ direction: Direction) -> [Point] {
+        switch direction {
+        case .North: return north
+        case .East: return east
+        case .South: return south
+        case .West: return west
+        }
     }
 
     func containsPoint(_ point: Point) -> Bool {

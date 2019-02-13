@@ -6,7 +6,9 @@
 //  Copyright © 2019 Pierce Corp. All rights reserved.
 //
 
-public struct Point: Comparable, CustomStringConvertible {
+public struct Point: Comparable, CustomStringConvertible, DirectionIndexable {
+    typealias DirectionalElement = Point
+
     public static let Origin = Point(0, 0)
     public static let NorthUnit = Point(0, 1)
     public static let NorthEastUnit = Point(1, 1)
@@ -25,6 +27,16 @@ public struct Point: Comparable, CustomStringConvertible {
     init(_ x: Int, _ y: Int) {
         self.x = x
         self.y = y
+    }
+
+    /// Returns a point adjacent to the current point in the indicated direction.
+    func getElementForDirection(_ direction: Direction) -> Point {
+        switch direction {
+        case .North: return self + Point.NorthUnit
+        case .East: return self + Point.EastUnit
+        case .South: return self + Point.SouthUnit
+        case .West: return self + Point.WestUnit
+        }
     }
 
     /// Produces a list of the current point and its neighboring points up to `size` points away.
