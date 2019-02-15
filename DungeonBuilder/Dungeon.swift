@@ -108,22 +108,12 @@ public class Dungeon  {
         // Determine which points (including the current one) are actually valid. This depends on two factors:
         //   1. Each point exists within the map (not out of bounds).
         //   2. The block at each point is uninitialized.
-        let radius = (passageWidth - (passageWidth % 2)) / 2
+        let radius = convertPassageWidthToRadius(passageWidth)
         let neighborhood = point.neighborhood(ofRadius: radius)
-        guard neighborhood.points.allSatisfy({ blockAt(point: $0)?.type == .Uninitialized }) else {
+        guard canExcavateNeighborhood(neighborhood, withMinimumGap: minimumGap) else {
             return
         }
-        // Ensure the minimum gap is satisfied on all sides.
-        for scalar in 1 ... minimumGap {
-            let lookaheadPoints = neighborhood.getDirectionalEdges().flatMap { (direction, neighborhood) in
-                neighborhood.getElementForDirection(direction).points.map { $0 + (Point.getUnitPointForDirection(direction) * scalar) }
-            }
-            guard lookaheadPoints.allSatisfy({ blockAt(point: $0)?.type == .Uninitialized }) else {
-                return
-            }
-        }
-        // Excavate the neighborhood.
-        fill(in: neighborhood, withBlockType: .EmptyPassage)
+        excavateNeighborhood(neighborhood)
         // Then excavate until we can't anymore.
         var center: Point = point
         while true {
@@ -156,6 +146,32 @@ public class Dungeon  {
             }
             center = center.getElementForDirection(digDirection)
         }
+    }
+
+    private func convertPassageWidthToRadius(_ passageWidth: Int) -> Int {
+        return (passageWidth - (passageWidth % 2)) / 2
+    }
+
+    private func canExcavateNeighborhood(_ neighborhood: Neighborhood, withMinimumGap minimumGap: Int) -> Bool {
+        // Check that every point in this neighborhood is uninitialized.
+        guard neighborhood.points.allSatisfy({ blockAt(point: $0)?.type == .Uninitialized }) else {
+            return false
+        }
+        // Ensure the minimum gap is satisfied on all sides.
+        for scalar in 1 ... minimumGap {
+            guard neighborhood.getDirectionalEdges().flatMap({ (direction, neighborhood) in
+                neighborhood.getElementForDirection(direction).points.map { $0 + (Point.getUnitPointForDirection(direction) * scalar) }
+            }).allSatisfy({ blockAt(point: $0)?.type == .Uninitialized }) else {
+                return false
+            }
+        }
+        // Everything checks out.
+        return true
+    }
+
+    private func excavateNeighborhood(_ neighborhood: Neighborhood) {
+        // Excavate the neighborhood.
+        fill(in: neighborhood, withBlockType: .EmptyPassage)
     }
 
     public func blockAt(x: Int, y: Int) -> Block? {
