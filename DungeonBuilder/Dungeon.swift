@@ -6,13 +6,13 @@
 //  Copyright © 2019 Pierce Corp. All rights reserved.
 //
 
-let DEFAULT_SIZE = 100
+let DEFAULT_MAX_SIZE = 100
 let DEFAULT_MODIFIER = 0.8
 let MIN_ENDPOINTS_DISTANCE = Double(10)
-let MIN_WIDTH = 40
-let MIN_HEIGHT = 20
-let MIN_ROOM_WIDTH = 5
-let MIN_ROOM_HEIGHT = 5
+let DEFAULT_MIN_WIDTH = 40
+let DEFAULT_MIN_HEIGHT = 20
+let DEFAULT_MIN_ROOM_WIDTH = 5
+let DEFAULT_MIN_ROOM_HEIGHT = 5
 
 /*
 
@@ -37,29 +37,32 @@ let MIN_ROOM_HEIGHT = 5
 
 typealias Room = Neighborhood
 
-public class Dungeon {
-    let minRoomWidth: Int = MIN_ROOM_WIDTH
+public class Dungeon  {
+    let minRoomWidth: Int
     let maxRoomWidth: Int
-    let minRoomHeight: Int = MIN_ROOM_HEIGHT
+    let minRoomHeight: Int
     let maxRoomHeight: Int
     var blocks: [[Block]]  // y-indexed first, then x-indexed; (0, 0) is the bottom-left corner, so all coordinates have positive values
+    public var images: [UIImage] = []
     public let width: Int
     public let height: Int
 
-    public convenience init(minWidth: Int? = nil, maxWidth: Int? = nil, minHeight: Int? = nil, maxHeight: Int? = nil, modifier: Double? = nil) {
-        self.init(minWidth: minWidth ?? MIN_WIDTH, maxWidth: maxWidth ?? DEFAULT_SIZE, minHeight: minHeight ?? MIN_HEIGHT, maxHeight: maxHeight ?? DEFAULT_SIZE, modifier: modifier ?? DEFAULT_MODIFIER)
+    public convenience init(minWidth: Int? = nil, maxWidth: Int? = nil, minHeight: Int? = nil, maxHeight: Int? = nil, minRoomWidth: Int? = nil, minRoomHeight: Int? = nil, modifier: Double? = nil) {
+        self.init(minWidth: minWidth ?? DEFAULT_MIN_WIDTH, maxWidth: maxWidth ?? DEFAULT_MAX_SIZE, minHeight: minHeight ?? DEFAULT_MIN_HEIGHT, maxHeight: maxHeight ?? DEFAULT_MAX_SIZE, minRoomWidth: minRoomWidth ?? DEFAULT_MIN_ROOM_WIDTH, minRoomHeight: minRoomHeight ?? DEFAULT_MIN_ROOM_HEIGHT, modifier: modifier ?? DEFAULT_MODIFIER)
     }
 
-    init(minWidth: Int, maxWidth: Int, minHeight: Int, maxHeight: Int, modifier: Double) {
+    init(minWidth: Int, maxWidth: Int, minHeight: Int, maxHeight: Int, minRoomWidth: Int, minRoomHeight: Int, modifier: Double) {
         // Generate width and height.
-        width = Int.random(in: max(Int(modifier * Double(maxWidth)), minWidth) ... maxWidth)
-        height = Int.random(in: max(Int(modifier * Double(maxHeight)), minHeight) ... maxHeight)
-        maxRoomWidth = Int.random(in: minRoomWidth ... Int(modifier * Double(width / 5)))
-        maxRoomHeight = Int.random(in: minRoomHeight ... Int(modifier * Double(height / 5)))
+        self.width = Int.random(in: max(Int(modifier * Double(maxWidth)), minWidth) ... maxWidth)
+        self.height = Int.random(in: max(Int(modifier * Double(maxHeight)), minHeight) ... maxHeight)
+        self.minRoomWidth = minRoomWidth
+        self.minRoomHeight = minRoomHeight
+        self.maxRoomWidth = Int.random(in: minRoomWidth ... Int(modifier * Double(width / 5)))
+        self.maxRoomHeight = Int.random(in: minRoomHeight ... Int(modifier * Double(height / 5)))
         // Generate uninitialized blocks to populate the list.
         let xRange = 0 ..< width
         let yRange = 0 ..< height
-        blocks = yRange.map { y in xRange.map { x in Block(type: .Uninitialized, x: x, y: y) }}
+        self.blocks = yRange.map { y in xRange.map { x in Block(type: .Uninitialized, x: x, y: y) }}
         // Begin excavation.
         excavate()
     }
@@ -148,6 +151,9 @@ public class Dungeon {
             }
             // A direction has been selected. Perform the excavation.
             fill(in: digEdge, withBlockType: .EmptyPassage)
+            if let image = render() {
+                images.append(image)
+            }
             center = center.getElementForDirection(digDirection)
         }
     }
@@ -205,5 +211,28 @@ public class Dungeon {
         let end = Point(start.x + roomWidth, start.y + roomHeight)
         let room = Room(bottomLeftCorner: start, topRightCorner: end)
         return room
+    }
+
+    private static func getPixelForBlock(_ block: Block) -> PixelData {
+        switch block.type {
+        case .Uninitialized: return .Black
+        case .EmptyRoom: return .White
+        case .EmptyPassage: return .Red
+        }
+    }
+
+    public func render() -> UIImage? {
+        let pixels = self.flatMapBlocks(Dungeon.getPixelForBlock)
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue)
+        guard let provider = CGDataProvider.init(data: NSData(bytes: pixels, length: pixels.count * PixelData.size)) else {
+            print("Unable to initialize provider.")
+            return nil
+        }
+        guard let cgImage = CGImage.init(width: width, height: height, bitsPerComponent: 8, bitsPerPixel: 32, bytesPerRow: width * PixelData.size, space: colorSpace, bitmapInfo: bitmapInfo, provider: provider, decode: nil, shouldInterpolate: true, intent: CGColorRenderingIntent.defaultIntent) else {
+            print("Unable to build CGImage.")
+            return nil
+        }
+        return UIImage(cgImage: cgImage)
     }
 }

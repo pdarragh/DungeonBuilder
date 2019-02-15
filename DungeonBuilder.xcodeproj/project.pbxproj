@@ -8,7 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		4F4ADBF322149DD200E9122A /* CyclingSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4ADBF222149DD200E9122A /* CyclingSequence.swift */; };
-		4F7ABEEA2213608F009F3EA7 /* DungeonBitmapRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7ABEE92213608F009F3EA7 /* DungeonBitmapRenderer.swift */; };
+		4F4ADBFA2217609400E9122A /* Dungeon+Rendering.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4ADBF92217609400E9122A /* Dungeon+Rendering.swift */; };
+		4F4ADBFC221760A700E9122A /* UIImage+CreateAnimatedGif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4ADBFB221760A700E9122A /* UIImage+CreateAnimatedGif.swift */; };
+		4F7ABEEA2213608F009F3EA7 /* PixelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7ABEE92213608F009F3EA7 /* PixelData.swift */; };
 		4F85653A22148C0A006FCA61 /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F85653922148C0A006FCA61 /* Direction.swift */; };
 		4F85653C22148E99006FCA61 /* Neighborhood.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F85653B22148E99006FCA61 /* Neighborhood.swift */; };
 		4F8CB7032211F438001009A8 /* DungeonBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 4F8CB7012211F438001009A8 /* DungeonBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -19,7 +21,9 @@
 
 /* Begin PBXFileReference section */
 		4F4ADBF222149DD200E9122A /* CyclingSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CyclingSequence.swift; sourceTree = "<group>"; };
-		4F7ABEE92213608F009F3EA7 /* DungeonBitmapRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DungeonBitmapRenderer.swift; sourceTree = "<group>"; };
+		4F4ADBF92217609400E9122A /* Dungeon+Rendering.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dungeon+Rendering.swift"; sourceTree = "<group>"; };
+		4F4ADBFB221760A700E9122A /* UIImage+CreateAnimatedGif.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+CreateAnimatedGif.swift"; sourceTree = "<group>"; };
+		4F7ABEE92213608F009F3EA7 /* PixelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelData.swift; sourceTree = "<group>"; };
 		4F85653922148C0A006FCA61 /* Direction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Direction.swift; sourceTree = "<group>"; };
 		4F85653B22148E99006FCA61 /* Neighborhood.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Neighborhood.swift; sourceTree = "<group>"; };
 		4F8CB6FE2211F438001009A8 /* DungeonBuilder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DungeonBuilder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -41,6 +45,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4F4ADBF622175EF000E9122A /* Rendering */ = {
+			isa = PBXGroup;
+			children = (
+				4F7ABEE92213608F009F3EA7 /* PixelData.swift */,
+				4F4ADBF92217609400E9122A /* Dungeon+Rendering.swift */,
+				4F4ADBFB221760A700E9122A /* UIImage+CreateAnimatedGif.swift */,
+			);
+			path = Rendering;
+			sourceTree = "<group>";
+		};
 		4F8CB6F42211F438001009A8 = {
 			isa = PBXGroup;
 			children = (
@@ -60,11 +74,11 @@
 		4F8CB7002211F438001009A8 /* DungeonBuilder */ = {
 			isa = PBXGroup;
 			children = (
+				4F4ADBF622175EF000E9122A /* Rendering */,
 				4F8CB7012211F438001009A8 /* DungeonBuilder.h */,
 				4F8CB7022211F438001009A8 /* Info.plist */,
 				4F8CB70B2211F557001009A8 /* Block.swift */,
 				4F8CB7112211F6B6001009A8 /* Dungeon.swift */,
-				4F7ABEE92213608F009F3EA7 /* DungeonBitmapRenderer.swift */,
 				4F8CB70F2211F695001009A8 /* Point.swift */,
 				4F85653922148C0A006FCA61 /* Direction.swift */,
 				4F85653B22148E99006FCA61 /* Neighborhood.swift */,
@@ -155,10 +169,12 @@
 				4F8CB7122211F6B6001009A8 /* Dungeon.swift in Sources */,
 				4F8CB70C2211F557001009A8 /* Block.swift in Sources */,
 				4F8CB7102211F695001009A8 /* Point.swift in Sources */,
+				4F4ADBFA2217609400E9122A /* Dungeon+Rendering.swift in Sources */,
 				4F85653C22148E99006FCA61 /* Neighborhood.swift in Sources */,
+				4F4ADBFC221760A700E9122A /* UIImage+CreateAnimatedGif.swift in Sources */,
 				4F4ADBF322149DD200E9122A /* CyclingSequence.swift in Sources */,
 				4F85653A22148C0A006FCA61 /* Direction.swift in Sources */,
-				4F7ABEEA2213608F009F3EA7 /* DungeonBitmapRenderer.swift in Sources */,
+				4F7ABEEA2213608F009F3EA7 /* PixelData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
