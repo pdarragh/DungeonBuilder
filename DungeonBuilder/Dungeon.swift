@@ -114,38 +114,34 @@ public class Dungeon  {
             return
         }
         excavateNeighborhood(neighborhood)
+        if let image = render() {
+            images.append(image)
+        }
         // Then excavate until we can't anymore.
-        var center: Point = point
-        while true {
-            let neighborhood = center.neighborhood(ofRadius: radius)
-            // Filter the edges to find only those which are valid for further excavation.
-            let validDirectionalEdges = neighborhood.getDirectionalEdges().filter({ (direction, edge) in
-                // Ensure a single step in the given direction would be acceptable.
-                guard edge.points.map({ $0 + (Point.getUnitPointForDirection(direction) * minimumGap) }).allSatisfy({ blockAt(point: $0)?.type == .Uninitialized }) else {
-                    return false
-                }
-                // Check that the gaps orthogonal to the given direction would be maintained.
-                return direction.orthogonal.allSatisfy({ orth in
-                    // For each orthogonal direction...
-                    return (1 ... minimumGap).allSatisfy({ scalar in
-                        edge.getElementForDirection(orth).points.allSatisfy({ point in
-                            blockAt(point: point + (Point.getUnitPointForDirection(orth) * scalar))?.type == .Uninitialized
-                        })
-                    })
-                })
-            })
-            // Pick a random direction to go.
-            guard let (digDirection, digEdge) = validDirectionalEdges.randomElement() else {
-                // There were no valid directions in which to dig.
-                return
-            }
-            // A direction has been selected. Perform the excavation.
-            fill(in: digEdge, withBlockType: .EmptyPassage)
+        var maybeNeighborhood: Neighborhood? = neighborhood
+        while let neighborhood = maybeNeighborhood {
+            // Attempt a step.
+            maybeNeighborhood = takeExcavationStep(withNeighborhood: neighborhood, withMinimumGap: minimumGap)
             if let image = render() {
                 images.append(image)
             }
-            center = center.getElementForDirection(digDirection)
         }
+    }
+
+    private func takeExcavationStep(withNeighborhood neighborhood: Neighborhood, withMinimumGap minimumGap: Int) -> Neighborhood? {
+        // Determine which directions are valid.
+        let validDirectionalEdges = neighborhood.getDirectionalEdges().filter({ (direction, edge) in
+            return canExcavateNeighborhood(edge, inDirection: direction, withMinimumGap: minimumGap)
+        })
+        // Pick just one of those.
+        guard let (direction, _) = validDirectionalEdges.randomElement() else {
+            // There were no valid directions to dig.
+            return nil
+        }
+        // Dig it out and return the new neighborhood.
+        let newNeighborhood = neighborhood.translate(inDirection: direction, byAmount: 1)
+        excavateNeighborhood(newNeighborhood)
+        return newNeighborhood
     }
 
     private func convertPassageWidthToRadius(_ passageWidth: Int) -> Int {
@@ -158,14 +154,19 @@ public class Dungeon  {
             return false
         }
         // Ensure the minimum gap is satisfied on all sides.
+        guard Direction.allCases.allSatisfy({ canExcavateNeighborhood(neighborhood, inDirection: $0, withMinimumGap: minimumGap) }) else {
+            return false
+        }
+        // Everything checks out.
+        return true
+    }
+
+    private func canExcavateNeighborhood(_ neighborhood: Neighborhood, inDirection direction: Direction, withMinimumGap minimumGap: Int) -> Bool {
         for scalar in 1 ... minimumGap {
-            guard neighborhood.getDirectionalEdges().flatMap({ (direction, neighborhood) in
-                neighborhood.getElementForDirection(direction).points.map { $0 + (Point.getUnitPointForDirection(direction) * scalar) }
-            }).allSatisfy({ blockAt(point: $0)?.type == .Uninitialized }) else {
+            guard neighborhood.getElementForDirection(direction).translate(inDirection: direction, byAmount: scalar).points.allSatisfy({ blockAt(point: $0)?.type == .Uninitialized }) else {
                 return false
             }
         }
-        // Everything checks out.
         return true
     }
 
