@@ -49,10 +49,17 @@
 			isa = PBXGroup;
 			children = (
 				4F7ABEE92213608F009F3EA7 /* PixelData.swift */,
-				4F4ADBFB221760A700E9122A /* UIImage+CreateAnimatedGif.swift */,
 				4F4ADBFD2217755C00E9122A /* RenderableDungeon.swift */,
 			);
 			path = Rendering;
+			sourceTree = "<group>";
+		};
+		4F4ADBFF22177DF000E9122A /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				4F4ADBFB221760A700E9122A /* UIImage+CreateAnimatedGif.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		4F8CB6F42211F438001009A8 = {
@@ -74,6 +81,7 @@
 		4F8CB7002211F438001009A8 /* DungeonBuilder */ = {
 			isa = PBXGroup;
 			children = (
+				4F4ADBFF22177DF000E9122A /* Extensions */,
 				4F4ADBF622175EF000E9122A /* Rendering */,
 				4F8CB7012211F438001009A8 /* DungeonBuilder.h */,
 				4F8CB7022211F438001009A8 /* Info.plist */,
