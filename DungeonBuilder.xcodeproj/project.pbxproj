@@ -10,6 +10,7 @@
 		4F4ADBF322149DD200E9122A /* CyclingSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4ADBF222149DD200E9122A /* CyclingSequence.swift */; };
 		4F4ADBFC221760A700E9122A /* UIImage+CreateAnimatedGif.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4ADBFB221760A700E9122A /* UIImage+CreateAnimatedGif.swift */; };
 		4F4ADBFE2217755C00E9122A /* RenderableDungeon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4ADBFD2217755C00E9122A /* RenderableDungeon.swift */; };
+		4F4ADC0122177E1A00E9122A /* Bool+RandomWithProbability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F4ADC0022177E1A00E9122A /* Bool+RandomWithProbability.swift */; };
 		4F7ABEEA2213608F009F3EA7 /* PixelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F7ABEE92213608F009F3EA7 /* PixelData.swift */; };
 		4F85653A22148C0A006FCA61 /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F85653922148C0A006FCA61 /* Direction.swift */; };
 		4F85653C22148E99006FCA61 /* Neighborhood.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F85653B22148E99006FCA61 /* Neighborhood.swift */; };
@@ -23,6 +24,7 @@
 		4F4ADBF222149DD200E9122A /* CyclingSequence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CyclingSequence.swift; sourceTree = "<group>"; };
 		4F4ADBFB221760A700E9122A /* UIImage+CreateAnimatedGif.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+CreateAnimatedGif.swift"; sourceTree = "<group>"; };
 		4F4ADBFD2217755C00E9122A /* RenderableDungeon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderableDungeon.swift; sourceTree = "<group>"; };
+		4F4ADC0022177E1A00E9122A /* Bool+RandomWithProbability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bool+RandomWithProbability.swift"; sourceTree = "<group>"; };
 		4F7ABEE92213608F009F3EA7 /* PixelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelData.swift; sourceTree = "<group>"; };
 		4F85653922148C0A006FCA61 /* Direction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Direction.swift; sourceTree = "<group>"; };
 		4F85653B22148E99006FCA61 /* Neighborhood.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Neighborhood.swift; sourceTree = "<group>"; };
@@ -58,6 +60,7 @@
 			isa = PBXGroup;
 			children = (
 				4F4ADBFB221760A700E9122A /* UIImage+CreateAnimatedGif.swift */,
+				4F4ADC0022177E1A00E9122A /* Bool+RandomWithProbability.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -178,6 +181,7 @@
 				4F8CB70C2211F557001009A8 /* Block.swift in Sources */,
 				4F8CB7102211F695001009A8 /* Point.swift in Sources */,
 				4F85653C22148E99006FCA61 /* Neighborhood.swift in Sources */,
+				4F4ADC0122177E1A00E9122A /* Bool+RandomWithProbability.swift in Sources */,
 				4F4ADBFC221760A700E9122A /* UIImage+CreateAnimatedGif.swift in Sources */,
 				4F4ADBF322149DD200E9122A /* CyclingSequence.swift in Sources */,
 				4F85653A22148C0A006FCA61 /* Direction.swift in Sources */,
