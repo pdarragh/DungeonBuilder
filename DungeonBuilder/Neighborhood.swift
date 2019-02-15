@@ -79,22 +79,18 @@ struct Neighborhood: DirectionIndexable {
         return other.corners.allSatisfy({ self.containsPoint($0) })
     }
 
-    static func overlapsWith(lhs: Neighborhood, rhs: Neighborhood) -> Bool {
-        for lPoint in lhs.corners {
-            if rhs.containsPoint(lPoint) {
+    func overlapsWithNeighborhood(_ other: Neighborhood) -> Bool {
+        for lPoint in self.corners {
+            if other.containsPoint(lPoint) {
                 return true
             }
         }
-        for rPoint in rhs.corners {
-            if lhs.containsPoint(rPoint) {
+        for rPoint in other.corners {
+            if self.containsPoint(rPoint) {
                 return true
             }
         }
         return false
-    }
-
-    func overlapsWith(other: Neighborhood) -> Bool {
-        return Neighborhood.overlapsWith(lhs: self, rhs: other)
     }
 }
 

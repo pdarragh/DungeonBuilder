@@ -188,7 +188,7 @@ public class Dungeon  {
             let newRoom = generateRoom()
             var roomOverlaps = false
             for room in rooms {
-                if newRoom.overlapsWith(other: room) {
+                if newRoom.overlapsWithNeighborhood(room) {
                     roomOverlaps = true
                     break
                 }
