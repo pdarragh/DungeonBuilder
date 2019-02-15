@@ -50,6 +50,11 @@ struct Neighborhood: DirectionIndexable {
         self.topRightCorner = topRightCorner
     }
 
+    func translate(inDirection direction: Direction, byAmount amount: Int) -> Neighborhood {
+        let offset = Point.getUnitPointForDirection(direction) * amount
+        return Neighborhood(bottomLeftCorner: self.bottomLeftCorner + offset, topRightCorner: self.topRightCorner + offset)
+    }
+
     func getElementForDirection(_ direction: Direction) -> Neighborhood {
         switch direction {
         case .North: return north
@@ -68,6 +73,10 @@ struct Neighborhood: DirectionIndexable {
     func containsPoint(_ point: Point) -> Bool {
         // It is assumed that the bottom-left is the least-valued corner (i.e., is the closest to the origin).
         return point.x >= leftX && point.x <= rightX && point.y >= bottomY && point.y <= topY
+    }
+
+    func containsNeighborhood(_ other: Neighborhood) -> Bool {
+        return other.corners.allSatisfy({ self.containsPoint($0) })
     }
 
     static func overlapsWith(lhs: Neighborhood, rhs: Neighborhood) -> Bool {
