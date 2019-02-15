@@ -43,7 +43,7 @@ public class Dungeon  {
     let minRoomHeight: Int
     let maxRoomHeight: Int
     var blocks: [[Block]]  // y-indexed first, then x-indexed; (0, 0) is the bottom-left corner, so all coordinates have positive values
-    public var images: [UIImage] = []
+    var rooms: [Room] = []
     public let width: Int
     public let height: Int
 
@@ -64,143 +64,13 @@ public class Dungeon  {
         let yRange = 0 ..< height
         self.blocks = yRange.map { y in xRange.map { x in Block(type: .Uninitialized, x: x, y: y) }}
         // Begin excavation.
-        excavate()
+        generateRooms()
+        excavatePassages()
     }
 
-    public func flatMapBlocks<T>(_ transform: ((Block) -> T)) -> [T] {
-        return blocks.flatMap { $0.map { transform($0) } }
-    }
-
-    public func forEachBlock(_ body: ((Block) -> Void)) {
-        blocks.forEach{ $0.forEach { body($0) } }
-    }
-
-    public func forEachPoint(_ body: ((Point) -> Void)) {
-        for y in 0 ..< height {
-            for x in 0 ..< width {
-                body(Point(x, y))
-            }
-        }
-    }
-
-    private func excavate() {
-        generateRooms().forEach{ room in
-            fill(in: room, withBlockType: .EmptyRoom)
-        }
-        forEachPoint { point in
-            generatePassageFromPoint(point: point, passageWidth: 3, minimumGap: 1)
-        }
-    }
-
-    private func fill(in room: Room, withBlockType blockType: BlockType) {
-        fill(from: room.bottomLeftCorner, to: room.topRightCorner, withBlockType: blockType)
-    }
-
-    private func fill(from pointA: Point, to pointB: Point, withBlockType blockType: BlockType) {
-        for y in pointA.y ... pointB.y {
-            for x in pointA.x ... pointB.x {
-                setBlockAt(x: x, y: y, toValue: Block(type: blockType, x: x, y: y))
-            }
-        }
-    }
-
-    private func generatePassageFromPoint(point: Point, passageWidth: Int, minimumGap: Int) {
-        // Determine which points (including the current one) are actually valid. This depends on two factors:
-        //   1. Each point exists within the map (not out of bounds).
-        //   2. The block at each point is uninitialized.
-        let radius = convertPassageWidthToRadius(passageWidth)
-        let neighborhood = point.neighborhood(ofRadius: radius)
-        guard canExcavateNeighborhood(neighborhood, withMinimumGap: minimumGap) else {
-            return
-        }
-        excavateNeighborhood(neighborhood)
-        if let image = render() {
-            images.append(image)
-        }
-        // Then excavate until we can't anymore.
-        var maybeNeighborhood: Neighborhood? = neighborhood
-        while let neighborhood = maybeNeighborhood {
-            // Attempt a step.
-            maybeNeighborhood = takeExcavationStep(withNeighborhood: neighborhood, withMinimumGap: minimumGap)
-            if let image = render() {
-                images.append(image)
-            }
-        }
-    }
-
-    private func takeExcavationStep(withNeighborhood neighborhood: Neighborhood, withMinimumGap minimumGap: Int) -> Neighborhood? {
-        // Determine which directions are valid.
-        let validDirectionalEdges = neighborhood.getDirectionalEdges().filter({ (direction, edge) in
-            return canExcavateNeighborhood(edge, inDirection: direction, withMinimumGap: minimumGap)
-        })
-        // Pick just one of those.
-        guard let (direction, _) = validDirectionalEdges.randomElement() else {
-            // There were no valid directions to dig.
-            return nil
-        }
-        // Dig it out and return the new neighborhood.
-        let newNeighborhood = neighborhood.translate(inDirection: direction, byAmount: 1)
-        excavateNeighborhood(newNeighborhood)
-        return newNeighborhood
-    }
-
-    private func convertPassageWidthToRadius(_ passageWidth: Int) -> Int {
-        return (passageWidth - (passageWidth % 2)) / 2
-    }
-
-    private func canExcavateNeighborhood(_ neighborhood: Neighborhood, withMinimumGap minimumGap: Int) -> Bool {
-        // Check that every point in this neighborhood is uninitialized.
-        guard neighborhood.points.allSatisfy({ blockAt(point: $0)?.type == .Uninitialized }) else {
-            return false
-        }
-        // Ensure the minimum gap is satisfied on all sides.
-        guard Direction.allCases.allSatisfy({ canExcavateNeighborhood(neighborhood, inDirection: $0, withMinimumGap: minimumGap) }) else {
-            return false
-        }
-        // Everything checks out.
-        return true
-    }
-
-    private func canExcavateNeighborhood(_ neighborhood: Neighborhood, inDirection direction: Direction, withMinimumGap minimumGap: Int) -> Bool {
-        for scalar in 1 ... minimumGap {
-            guard neighborhood.getElementForDirection(direction).translate(inDirection: direction, byAmount: scalar).points.allSatisfy({ blockAt(point: $0)?.type == .Uninitialized }) else {
-                return false
-            }
-        }
-        return true
-    }
-
-    private func excavateNeighborhood(_ neighborhood: Neighborhood) {
-        // Excavate the neighborhood.
-        fill(in: neighborhood, withBlockType: .EmptyPassage)
-    }
-
-    public func blockAt(x: Int, y: Int) -> Block? {
-        guard x >= 0 && x < width else {
-            return nil
-        }
-        guard y >= 0 && y < height else {
-            return nil
-        }
-        return blocks[y][x]  // y-indexed first, then x-indexed
-    }
-
-    public func blockAt(point: Point) -> Block? {
-        return blockAt(x: point.x, y: point.y)
-    }
-
-    private func setBlockAt(x: Int, y: Int, toValue block: Block) {
-        blocks[y][x] = block  // y-indexed first, then x-indexed
-    }
-
-    private func setBlockAt(point: Point, toType type: BlockType) {
-        setBlockAt(x: point.x, y: point.y, toValue: Block(type: type, x: point.x, y: point.y))
-    }
-
-    private func generateRooms() -> [Room] {
+    func generateRooms() {
         let attempts = 100
         let maxRooms = 10
-        var rooms: [Room] = []
         for _ in 0 ..< attempts {
             let newRoom = generateRoom()
             var roomOverlaps = false
@@ -218,10 +88,10 @@ public class Dungeon  {
                 break
             }
         }
-        return rooms
+        rooms.forEach { excavateRoom($0) }
     }
 
-    private func generateRoom() -> Room {
+    func generateRoom() -> Room {
         let roomWidth = Int.random(in: minRoomWidth ... maxRoomWidth)
         let roomHeight = Int.random(in: minRoomHeight ... maxRoomHeight)
         let start = Point.generateRandom(xMin: 0, xMax: width - 1 - roomWidth, yMin: 0, yMax: height - 1 - roomHeight)
@@ -230,26 +100,127 @@ public class Dungeon  {
         return room
     }
 
-    private static func getPixelForBlock(_ block: Block) -> PixelData {
-        switch block.type {
-        case .Uninitialized: return .Black
-        case .EmptyRoom: return .White
-        case .EmptyPassage: return .Red
+    func excavatePassages() {
+        forEachPoint { point in
+            generatePassageFromPoint(point: point, passageWidth: 3, minimumGap: 1)
         }
     }
 
-    public func render() -> UIImage? {
-        let pixels = self.flatMapBlocks(Dungeon.getPixelForBlock)
-        let colorSpace = CGColorSpaceCreateDeviceRGB()
-        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue)
-        guard let provider = CGDataProvider.init(data: NSData(bytes: pixels, length: pixels.count * PixelData.size)) else {
-            print("Unable to initialize provider.")
+    func generatePassageFromPoint(point: Point, passageWidth: Int, minimumGap: Int) {
+        // Determine which points (including the current one) are actually valid. This depends on two factors:
+        //   1. Each point exists within the map (not out of bounds).
+        //   2. The block at each point is uninitialized.
+        let radius = convertPassageWidthToRadius(passageWidth)
+        let neighborhood = point.neighborhood(ofRadius: radius)
+        guard canExcavateNeighborhood(neighborhood, withMinimumGap: minimumGap) else {
+            return
+        }
+        excavatePassage(neighborhood)
+        // Then excavate until we can't anymore.
+        var maybeNeighborhood: Neighborhood? = neighborhood
+        while let neighborhood = maybeNeighborhood {
+            // Attempt a step.
+            maybeNeighborhood = takeExcavationStep(withNeighborhood: neighborhood, withMinimumGap: minimumGap)
+        }
+    }
+
+    func takeExcavationStep(withNeighborhood neighborhood: Neighborhood, withMinimumGap minimumGap: Int) -> Neighborhood? {
+        // Determine which directions are valid.
+        let validDirectionalEdges = neighborhood.getDirectionalEdges().filter({ (direction, edge) in
+            return canExcavateNeighborhood(edge, inDirection: direction, withMinimumGap: minimumGap)
+        })
+        // Pick just one of those.
+        guard let (direction, _) = validDirectionalEdges.randomElement() else {
+            // There were no valid directions to dig.
             return nil
         }
-        guard let cgImage = CGImage.init(width: width, height: height, bitsPerComponent: 8, bitsPerPixel: 32, bytesPerRow: width * PixelData.size, space: colorSpace, bitmapInfo: bitmapInfo, provider: provider, decode: nil, shouldInterpolate: true, intent: CGColorRenderingIntent.defaultIntent) else {
-            print("Unable to build CGImage.")
+        // Dig it out and return the new neighborhood.
+        let newNeighborhood = neighborhood.translate(inDirection: direction, byAmount: 1)
+        excavatePassage(newNeighborhood)
+        return newNeighborhood
+    }
+
+    func convertPassageWidthToRadius(_ passageWidth: Int) -> Int {
+        return (passageWidth - (passageWidth % 2)) / 2
+    }
+
+    func canExcavateNeighborhood(_ neighborhood: Neighborhood, withMinimumGap minimumGap: Int) -> Bool {
+        // Check that every point in this neighborhood is uninitialized.
+        guard neighborhood.points.allSatisfy({ blockAt(point: $0)?.type == .Uninitialized }) else {
+            return false
+        }
+        // Ensure the minimum gap is satisfied on all sides.
+        guard Direction.allCases.allSatisfy({ canExcavateNeighborhood(neighborhood, inDirection: $0, withMinimumGap: minimumGap) }) else {
+            return false
+        }
+        // Everything checks out.
+        return true
+    }
+
+    func canExcavateNeighborhood(_ neighborhood: Neighborhood, inDirection direction: Direction, withMinimumGap minimumGap: Int) -> Bool {
+        for scalar in 1 ... minimumGap {
+            guard neighborhood.getElementForDirection(direction).translate(inDirection: direction, byAmount: scalar).points.allSatisfy({ blockAt(point: $0)?.type == .Uninitialized }) else {
+                return false
+            }
+        }
+        return true
+    }
+
+    func excavateRoom(_ room: Room) {
+        excavateNeighborhood(room, withBlockType: .EmptyRoom)
+    }
+
+    func excavatePassage(_ neighborhood: Neighborhood) {
+        excavateNeighborhood(neighborhood, withBlockType: .EmptyPassage)
+    }
+
+    func excavateNeighborhood(_ neighborhood: Neighborhood, withBlockType blockType: BlockType) {
+        fill(from: neighborhood.bottomLeftCorner, to: neighborhood.topRightCorner, withBlockType: blockType)
+    }
+
+    func fill(from pointA: Point, to pointB: Point, withBlockType blockType: BlockType) {
+        for y in pointA.y ... pointB.y {
+            for x in pointA.x ... pointB.x {
+                setBlockAt(x: x, y: y, toValue: Block(type: blockType, x: x, y: y))
+            }
+        }
+    }
+
+    public func blockAt(x: Int, y: Int) -> Block? {
+        guard x >= 0 && x < width else {
             return nil
         }
-        return UIImage(cgImage: cgImage)
+        guard y >= 0 && y < height else {
+            return nil
+        }
+        return blocks[y][x]  // y-indexed first, then x-indexed
+    }
+
+    public func blockAt(point: Point) -> Block? {
+        return blockAt(x: point.x, y: point.y)
+    }
+
+    func setBlockAt(x: Int, y: Int, toValue block: Block) {
+        blocks[y][x] = block  // y-indexed first, then x-indexed
+    }
+
+    func setBlockAt(point: Point, toType type: BlockType) {
+        setBlockAt(x: point.x, y: point.y, toValue: Block(type: type, x: point.x, y: point.y))
+    }
+
+    public func flatMapBlocks<T>(_ transform: ((Block) -> T)) -> [T] {
+        return blocks.flatMap { $0.map { transform($0) } }
+    }
+
+    public func forEachBlock(_ body: ((Block) -> Void)) {
+        blocks.forEach{ $0.forEach { body($0) } }
+    }
+
+    public func forEachPoint(_ body: ((Point) -> Void)) {
+        for y in 0 ..< height {
+            for x in 0 ..< width {
+                body(Point(x, y))
+            }
+        }
     }
 }

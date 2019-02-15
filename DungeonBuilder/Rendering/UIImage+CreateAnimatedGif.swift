@@ -11,7 +11,7 @@ import ImageIO
 
 extension UIImage {
     static func createAnimatedGif(from images: [UIImage], savingTo url: CFURL) {
-        let fileProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [kCGImagePropertyGIFLoopCount as String: 0]]  as CFDictionary
+        let fileProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [kCGImagePropertyGIFLoopCount as String: 1]]  as CFDictionary
         let frameProperties: CFDictionary = [kCGImagePropertyGIFDictionary as String: [(kCGImagePropertyGIFDelayTime as String): 0.05]] as CFDictionary
 
         if let destination = CGImageDestinationCreateWithURL(url, kUTTypeGIF, images.count, nil) {
