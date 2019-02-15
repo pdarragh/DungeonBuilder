@@ -111,33 +111,66 @@ public class Dungeon  {
         //   1. Each point exists within the map (not out of bounds).
         //   2. The block at each point is uninitialized.
         let radius = convertPassageWidthToRadius(passageWidth)
-        let neighborhood = point.neighborhood(ofRadius: radius)
+        var neighborhood = point.neighborhood(ofRadius: radius)
         guard canExcavateNeighborhood(neighborhood, withMinimumGap: minimumGap) else {
             return
         }
         excavatePassage(neighborhood)
         // Then excavate until we can't anymore.
-        var maybeNeighborhood: Neighborhood? = neighborhood
-        while let neighborhood = maybeNeighborhood {
+        var maintainDirectionProbability: Double = 1
+        var direction: Direction = .North
+        while true {
+            // Adjust the probability.
+            if maintainDirectionProbability < 0.1 {
+                maintainDirectionProbability = 1
+            }
             // Attempt a step.
-            maybeNeighborhood = takeExcavationStep(withNeighborhood: neighborhood, withMinimumGap: minimumGap)
+            if let (newNeighborhood, newDirection) = takeExcavationStep(withNeighborhood: neighborhood, withMinimumGap: minimumGap, inDirection: direction, withProbabilityOfMaintainingDirection: maintainDirectionProbability) {
+                // Adjust the probability.
+                if newDirection != direction {
+                    maintainDirectionProbability = 1
+                } else {
+                    maintainDirectionProbability *= 0.95
+                }
+                // Set the new values.
+                neighborhood = newNeighborhood
+                direction = newDirection
+            } else {
+                break
+            }
         }
     }
 
-    func takeExcavationStep(withNeighborhood neighborhood: Neighborhood, withMinimumGap minimumGap: Int) -> Neighborhood? {
+    func takeExcavationStep(withNeighborhood neighborhood: Neighborhood, withMinimumGap minimumGap: Int, inDirection direction: Direction, withProbabilityOfMaintainingDirection maintainDirectionProbability: Double) -> (Neighborhood, Direction)? {
         // Determine which directions are valid.
         let validDirectionalEdges = neighborhood.getDirectionalEdges().filter({ (direction, edge) in
             return canExcavateNeighborhood(edge, inDirection: direction, withMinimumGap: minimumGap)
         })
-        // Pick just one of those.
-        guard let (direction, _) = validDirectionalEdges.randomElement() else {
-            // There were no valid directions to dig.
+        if validDirectionalEdges.isEmpty {
             return nil
         }
+        // Pick a direction to attempt to dig.
+        let nextDirection: Direction
+        if validDirectionalEdges.count == 1 {
+            // If there's only one direction... probably use that one.
+            nextDirection = validDirectionalEdges.first!.0
+        } else {
+            if validDirectionalEdges.contains(where: { (dir, _) in dir == direction}) {
+                // If the previous direction is among the possible directions to go, randomly determine whether to continue in the same direction (based on the given probability).
+                if Bool.random(withProbability: maintainDirectionProbability) {
+                    nextDirection = direction
+                } else {
+                    nextDirection = validDirectionalEdges.filter({ (dir, _) in dir != direction}).randomElement()!.0
+                }
+            } else {
+                // Otherwise, just pick a direction.
+                nextDirection = validDirectionalEdges.randomElement()!.0
+            }
+        }
         // Dig it out and return the new neighborhood.
-        let newNeighborhood = neighborhood.translate(inDirection: direction, byAmount: 1)
+        let newNeighborhood = neighborhood.translate(inDirection: nextDirection, byAmount: 1)
         excavatePassage(newNeighborhood)
-        return newNeighborhood
+        return (newNeighborhood, nextDirection)
     }
 
     func convertPassageWidthToRadius(_ passageWidth: Int) -> Int {
