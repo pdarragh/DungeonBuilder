@@ -70,23 +70,23 @@ struct Neighborhood: DirectionIndexable {
         }
     }
 
-    func containsPoint(_ point: Point) -> Bool {
+    func contains(point: Point) -> Bool {
         // It is assumed that the bottom-left is the least-valued corner (i.e., is the closest to the origin).
         return point.x >= leftX && point.x <= rightX && point.y >= bottomY && point.y <= topY
     }
 
-    func containsNeighborhood(_ other: Neighborhood) -> Bool {
-        return other.corners.allSatisfy({ self.containsPoint($0) })
+    func contains(neighborhood other: Neighborhood) -> Bool {
+        return other.corners.allSatisfy({ self.contains(point: $0) })
     }
 
     func overlapsWithNeighborhood(_ other: Neighborhood) -> Bool {
         for lPoint in self.corners {
-            if other.containsPoint(lPoint) {
+            if other.contains(point: lPoint) {
                 return true
             }
         }
         for rPoint in other.corners {
-            if self.containsPoint(rPoint) {
+            if self.contains(point: rPoint) {
                 return true
             }
         }
