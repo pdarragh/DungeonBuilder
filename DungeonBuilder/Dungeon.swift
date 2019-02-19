@@ -119,16 +119,23 @@ public class Dungeon  {
         // Then excavate until we can't anymore.
         var maintainDirectionProbability: Double = 1
         var direction: Direction = .North
+        var minimumDigDistance = passageWidth
         while true {
             // Adjust the probability.
-            if maintainDirectionProbability < 0.1 {
+            if minimumDigDistance > 0 {
+                maintainDirectionProbability = 1
+                minimumDigDistance -= 1
+            } else if maintainDirectionProbability < 0.1 {
                 maintainDirectionProbability = 1
             }
             // Attempt a step.
             if let (newNeighborhood, newDirection) = takeExcavationStep(withNeighborhood: neighborhood, withMinimumGap: minimumGap, inDirection: direction, withProbabilityOfMaintainingDirection: maintainDirectionProbability) {
                 // Adjust the probability.
                 if newDirection != direction {
+                    // We've picked a new direction, so reset the probability of changing direction
+                    // and ensure we dig at least a passage width's worth of steps before changing again.
                     maintainDirectionProbability = 1
+                    minimumDigDistance = passageWidth
                 } else {
                     maintainDirectionProbability *= 0.95
                 }
