@@ -137,6 +137,7 @@ public class Dungeon  {
                     maintainDirectionProbability = 1
                     minimumDigDistance = passageWidth
                 } else {
+                    // No new direction, so we progressively reduce the probability of maintaining direction.
                     maintainDirectionProbability *= 0.95
                 }
                 // Set the new values.
@@ -151,7 +152,7 @@ public class Dungeon  {
     func takeExcavationStep(withNeighborhood neighborhood: Neighborhood, withMinimumGap minimumGap: Int, inDirection direction: Direction, withProbabilityOfMaintainingDirection maintainDirectionProbability: Double) -> (Neighborhood, Direction)? {
         // Determine which directions are valid.
         let validDirectionalEdges = neighborhood.getDirectionalEdges().filter({ (direction, edge) in
-            return canExcavateNeighborhood(edge, inDirection: direction, withMinimumGap: minimumGap)
+            return canTakeStepFromEdge(edge, inDirection: direction, withMinimumGap: minimumGap)
         })
         if validDirectionalEdges.isEmpty {
             return nil
@@ -178,6 +179,36 @@ public class Dungeon  {
         let newNeighborhood = neighborhood.translate(inDirection: nextDirection, byAmount: 1)
         excavatePassage(newNeighborhood)
         return (newNeighborhood, nextDirection)
+    }
+
+    func canTakeStepFromEdge(_ edge: Neighborhood, inDirection direction: Direction, withMinimumGap minimumGap: Int) -> Bool {
+        // Translate the edge.
+        let proposedEdge = edge.translate(inDirection: direction, byAmount: 1)
+        // Ensure the edge is excavatable.
+        guard proposedEdge.points.allSatisfy({ blockAt(point: $0)?.type == .Uninitialized }) else {
+            return false
+        }
+        // Check that the minimum gap is satisfied in the given direction and its orthogonal directions.
+        let checkDirections = [direction] + direction.orthogonal
+        guard checkDirections.allSatisfy({ checkDirection in
+            for scalar in 1 ... minimumGap {
+                let gapEdge = proposedEdge.getElementForDirection(checkDirection).translate(inDirection: checkDirection, byAmount: scalar)
+                return gapEdge.points.map({ blockAt(point: $0) }).allSatisfy({ block in
+                    if let block = block {
+                        return block.type == .Uninitialized
+                    } else {
+                        return true
+                    }
+                })
+            }
+            // The full width of the gap in this direction is valid.
+            return true
+        }) else {
+            // One of the edges could not satisfy the minimum gap requirement.
+            return false
+        }
+        // Everything checks out.
+        return true
     }
 
     func convertPassageWidthToRadius(_ passageWidth: Int) -> Int {
