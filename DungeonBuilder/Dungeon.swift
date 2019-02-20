@@ -117,8 +117,8 @@ public class Dungeon  {
         }
         excavatePassage(neighborhood)
         // Then excavate until we can't anymore.
-        var maintainDirectionProbability: Double = 1
-        var direction: Direction = .North
+        var maintainDirectionProbability: Double = 1.0
+        var direction: Direction = Direction.generateRandom()
         var minimumDigDistance = passageWidth
         while true {
             // Adjust the probability.
