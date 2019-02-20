@@ -279,8 +279,12 @@ public class Dungeon  {
         setBlockAt(x: point.x, y: point.y, toValue: Block(type: type, x: point.x, y: point.y))
     }
 
+    public func flatMapPoints<T>(_ transform: ((Point) -> T)) -> [T] {
+        return (0 ..< height).flatMap({ y in (0 ..< width).map ({ x in transform(Point(x, y)) })})
+    }
+
     public func flatMapBlocks<T>(_ transform: ((Block) -> T)) -> [T] {
-        return blocks.flatMap { $0.map { transform($0) } }
+        return flatMapPoints({ point in transform(blockAt(point: point)!) })
     }
 
     public func forEachBlock(_ body: ((Block) -> Void)) {
