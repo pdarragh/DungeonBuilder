@@ -158,21 +158,21 @@ public class Dungeon  {
             return nil
         }
         // Pick a direction to attempt to dig.
+        let mustMaintainDirection = Bool.random(withProbability: maintainDirectionProbability)
         let nextDirection: Direction
-        if validDirectionalEdges.count == 1 {
-            // If there's only one direction... probably use that one.
-            nextDirection = validDirectionalEdges.first!.0
-        } else {
-            if validDirectionalEdges.contains(where: { (dir, _) in dir == direction}) {
-                // If the previous direction is among the possible directions to go, randomly determine whether to continue in the same direction (based on the given probability).
-                if Bool.random(withProbability: maintainDirectionProbability) {
-                    nextDirection = direction
-                } else {
-                    nextDirection = validDirectionalEdges.filter({ (dir, _) in dir != direction}).randomElement()!.0
-                }
+        if mustMaintainDirection {
+            // We must maintain the current direction. If we can't dig that way anymore, quit.
+            if validDirectionalEdges.contains(where: { (dir, _) in dir == direction }) {
+                nextDirection = direction
             } else {
-                // Otherwise, just pick a direction.
+                return nil
+            }
+        } else {
+            // We are not *required* to dig in the same direction (though we still can by chance). Pick a valid direction at random.
+            if validDirectionalEdges.count > 0 {
                 nextDirection = validDirectionalEdges.randomElement()!.0
+            } else {
+                return nil
             }
         }
         // Dig it out and return the new neighborhood.
